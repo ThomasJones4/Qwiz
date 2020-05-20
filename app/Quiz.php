@@ -12,7 +12,7 @@ class Quiz extends Model
       return $this->hasMany(Question::class);
     }
 
-    public function user() {
-      return $this->belongsTo(User::class);
+    public function quiz_master() {
+      return $this->belongsTo(User::class, 'user_id');
     }
 }

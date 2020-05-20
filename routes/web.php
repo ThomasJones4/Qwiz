@@ -28,5 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 
   Route::resource('quizzes', 'QuizController', ['only' => ['show']]);
+  Route::resource('questions', 'QuestionController', ['only' => ['show']])->names([
+    'show' => 'question.show']);
 
 });

@@ -23,9 +23,9 @@
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
-          <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span class="btn-inner--icon"><i class="fa fa-hourglass-start"></i></span>
-            <span class="btn-inner--text">Waiting for quiz to start</span>
+          <a href="#" id="quiz_start_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+            <span id="quiz_start_btn_text" class="btn-inner--text">Waiting for quiz to start</span>
+            <span class="btn-inner--icon"><i id="quiz_start_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>
     </div>
@@ -39,15 +39,19 @@
      $.ajax({
       url: '{{ route('quiz_ready', [$quiz]) }}',
       type: 'get',
-      success: function(response){
-       // Perform operation on the return value
-       console.log(response);
-      }
+      success: function(data){
+      // quiz ready, update page
+       clearInterval(interval);
+       $('#quiz_start_btn').attr('href', data.next);
+       $('#quiz_start_btn_text').text('Start Quiz');
+       $('#quiz_start_btn_icon').removeClass().addClass('fa fa-play');
+     }
      });
     }
 
     $(document).ready(function(){
-     setInterval(fetchdata,2000);
+     fetchdata();
+     interval = setInterval(fetchdata,2000);
     });
     </script>
 @endpush

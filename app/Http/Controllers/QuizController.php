@@ -138,7 +138,7 @@ class QuizController extends Controller
       if ($first_question->released == "0") {
         return response()->json(["next" => null], 423);
       } else {
-        return response()->json(["next" => $first_question->id], 200);
+        return response()->json(["next" => route('question.show', $first_question) ], 200);
       }
     }
 }
