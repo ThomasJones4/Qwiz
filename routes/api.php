@@ -18,4 +18,4 @@ use App\Quiz;
 
 
   Route::get('quizzes/{quiz}/progress', 'QuizController@quiz_ready')->name('quiz_ready');
-  Route::get('quizzes/{quiz}/progress/{question}', 'QuizController@progress')->name('progress');
+  Route::get('questions/{question}/progress', 'QuestionController@next')->name('next_question');
