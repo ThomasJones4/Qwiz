@@ -4,15 +4,37 @@ namespace App;
 
 use App\Question;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
 {
+
+    protected $fillable = ['user_id'];
+
     public function questions() {
       return $this->hasMany(Question::class);
     }
 
     public function quiz_master() {
       return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function users() {
+      return $this->belongsToMany(User::class);
+    }
+
+    public function correct_so_far() {
+      $count = 0;
+      $this->questions->each(function ($question) use ($count) {
+          if ($question->correct()) {
+            $count++;
+          }
+      });
+      return $count;
+    }
+
+    public function is_live() {
+      return (null != $this->invite_code);
     }
 }
