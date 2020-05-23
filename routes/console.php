@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('db:wipeandbuild', function () {
+    Artisan::call('migrate:fresh');
+    Artisan::call('db:seed');
+    $this->info('Done.');
+})->describe('migrate:fresh followed by db:seed');

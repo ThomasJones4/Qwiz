@@ -27,8 +27,20 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 
-  Route::resource('quizzes', 'QuizController', ['only' => ['show']]);
-  Route::resource('questions', 'QuestionController', ['only' => ['show']])->names([
-    'show' => 'question.show']);
+  Route::get('quizzes/mine', 'QuizController@index_mine')->name('show.my.quiz');
 
+  Route::resource('quizzes', 'QuizController', ['only' => ['show']])->names([
+    'show' => 'quiz.show']);
+
+  Route::resource('questions', 'QuestionController', ['only' => ['show']])->names([
+    'show' => 'question.show',
+    ]);
+
+  Route::get('questions/{question}/next', 'QuestionController@show_next')->name('question.lobby');
+
+  Route::post('question/{question}/responses/store', 'ResponseController@store')->name('store.response');
+
+
+  Route::get('join/{quiz}', 'QuizController@show_join')->name('show.join.quiz');
+  Route::post('join/{quiz}', 'QuizController@join')->name('join.quiz');
 });

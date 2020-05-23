@@ -19,3 +19,5 @@ use App\Quiz;
 
   Route::get('quizzes/{quiz}/progress', 'QuizController@quiz_ready')->name('quiz_ready');
   Route::get('questions/{question}/progress', 'QuestionController@next')->name('next_question');
+  Route::get('questions/{question}/progress/force', 'QuestionController@next_force')->name('next_question_results');
+  Route::get('questions/{question}/responses/count', 'ResponseController@count')->name('response.count');
