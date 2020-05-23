@@ -7,6 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Question::class, function (Faker $faker) {
     return [
-        //
+        'title' => $faker->sentence(2),
+        'content' => $faker->sentence(5) . '?',
+        'released' => '0',
+        'correct_answer' => null,
     ];
 });
