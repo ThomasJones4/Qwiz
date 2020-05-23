@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Question;
 use App\User;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class QuestionPolicy
@@ -30,7 +32,13 @@ class QuestionPolicy
      */
     public function view(User $user, Question $question)
     {
-        //
+
+      // can view quiz
+      Gate::authorize('view', $question->quiz);
+
+      return ($question->released == '1')
+            ? Response::allow()
+            : Response::deny('This Question has not been released. (003)');
     }
 
     /**

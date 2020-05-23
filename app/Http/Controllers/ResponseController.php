@@ -104,6 +104,13 @@ class ResponseController extends Controller
      */
     public function count(Question $question)
     {
+
+        if ($question->released != "1") {
+          return response()->json([
+            'count' => -1,
+            'total' => -1,]);
+        }
+
         $quiz = $question->quiz;
         $total_players = -1;
         $participants = [];

@@ -47,11 +47,8 @@ class QuestionController extends Controller
      */
     public function show(Question $question)
     {
-      // TODO: make into gate
-      if ($question->released != '1') {
-          $error_message = "This Question has not been released yet";
-          return view('layouts.error', compact('error_message'));
-      }
+
+      Gate::authorize('view', $question);
 
       $all_questions = $question->quiz->questions;
 
@@ -64,6 +61,23 @@ class QuestionController extends Controller
         return view('question.show', compact('question', 'all_questions'));
       }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function master(Question $question)
+    {
+
+      Gate::authorize('view_master', $question->quiz);
+
+      $all_questions = $question->quiz->questions;
+
+      return view('question.master.show', compact('question', 'all_questions'));
+
+    }
     /**
      * Display the specified resource.
      *
@@ -72,11 +86,7 @@ class QuestionController extends Controller
      */
     public function show_next(Question $question)
     {
-        // TODO: make into gate
-        if ($question->released != '1') {
-            $error_message = "This Question has not been released yet";
-            return view('layouts.error', compact('error_message'));
-        }
+        Gate::authorize('view', $question);
 
         $all_questions = $question->quiz->questions;
 
@@ -96,6 +106,49 @@ class QuestionController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function master_next(Question $question)
+    {
+        Gate::authorize('view_master', $question->quiz);
+
+        $next_question = $question->next();
+        if ($next_question != "-1") {
+          $all_questions = $question->quiz->questions;
+
+          $next_question->released = "1";
+          $next_question->save();
+          $question = $next_question;
+          return view('question.master.show', compact('question', 'all_questions'));
+        } else {
+          dd('end the quiz?');
+        }
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function master_this(Question $question)
+    {
+        Gate::authorize('view_master', $question->quiz);
+
+        $all_questions = $question->quiz->questions;
+
+        $question->released = "1";
+        $question->save();
+
+        $question = $question;
+        return redirect()->route('question.master', compact('question', 'all_questions'));
+    }
+
+    /**
      * get the progress of the quiz
      *
      * @param  \App\Quiz  $quiz
@@ -103,6 +156,8 @@ class QuestionController extends Controller
      */
     public static function next(Question $question, $force = false)
     {
+
+      Gate::authorize('view', $question);
 
       $quiz = $question->quiz;
 
@@ -117,7 +172,7 @@ class QuestionController extends Controller
           // no more questions
           return response()->json(["next" => null, "type" => null], 200);
 
-      } else if ($next_question->released != "0") {
+      } else if ($next_question->released == "1") {
         // next question ready
         if ($question->title == "mid-scores") {
           return response()->json(["next" => route('question.lobby', $question), "type" => 'mid-scores', 'btn_text' => 'View Score Break Results'], 200);
@@ -143,9 +198,42 @@ class QuestionController extends Controller
         // next question ready
         return response()->json(["next" => route('question.show', $question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
         } else {
-        return response()->json(["next" => route('question.show', $next_question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
+        return response()->json(["next" => null, "type" => 'question', 'btn_text' => 'Waiting for Quiz Master'], 423);
 
-        }      }
+        }
+      }
+    }
+    /**
+     * get the progress of the quiz
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
+    public static function master_progress_next(Question $question)
+    {
+      Gate::authorize('view_master', $question->quiz);
+
+      $quiz = $question->quiz;
+
+      // if next question, set variable else set -1
+      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->first())
+                                  ? $quiz->questions->where('order', $question->order + 1)->first()
+                                  : "-1";
+
+
+      // TODO: replace $next_question->id with the url for the next question
+      if ($next_question == "-1") {
+          // no more questions
+          return response()->json(["next" => null, "type" => null], 200);
+
+      } else if ($question->released == "1") {
+        return response()->json(["next" => route('question.master', $next_question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
+      } else if ($question->released == "0" && $quiz->questions->sortBy('order')->where('released', "1")->count() == $question->order) {
+        return response()->json(["next" => route('question.master.this', $question), "type" => 'question', 'btn_text' => 'Release This Question'], 200);
+      } else {
+        $next_to_be_released = $quiz->questions->sortBy('order')->where('released', "0")->first();
+        return response()->json(["next" => route('question.master', $next_to_be_released), "type" => 'question', 'btn_text' => 'Go to first unreleased question'], 200);
+      }
     }
 
 
@@ -157,6 +245,8 @@ class QuestionController extends Controller
      */
     public static function next_force(Question $question)
     {
+
+      Gate::authorize('view', $question->quiz);
 
       $quiz = $question->quiz;
 

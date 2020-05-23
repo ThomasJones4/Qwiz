@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Quiz;
 use App\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -31,9 +32,24 @@ class QuizPolicy
      */
     public function view(User $user, Quiz $quiz)
     {
-        return $user->quizzes()->get()->contains($quiz)
+
+        return ($user->quizzes()->get()->contains($quiz) || Gate::inspect('view_master', $quiz)->allowed())
                   ? Response::allow()
-                  : Response::deny('You are can not view this quiz');
+                  : Response::deny('You can not view this quiz. (001)');
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Quiz  $quiz
+     * @return mixed
+     */
+    public function view_master(User $user, Quiz $quiz)
+    {
+        return ($user->my_quizzes->contains($quiz))
+                ? Response::allow()
+                : Response::deny('You do not own this quiz. (002)');
     }
 
     /**
