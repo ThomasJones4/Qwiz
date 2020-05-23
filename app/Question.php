@@ -29,10 +29,24 @@ class Question extends Model
   }
 
   public function is_latest() {
-    return ($this->order == $this->quiz->questions->sortBy('order')->where('released', 1)->last()->order);
+    if ($this->quiz->questions->sortBy('order')->where('released', 1)->count() != 0) {
+      return ($this->order == $this->quiz->questions->sortBy('order')->where('released', 1)->last()->order);
+    } else {
+      return false;
+    }
   }
 
   public function latest() {
-    return $this->quiz->questions->sortBy('order')->where('released', 1)->last()->order;
+    if ($this->quiz->questions->sortBy('order')->where('released', 1)->count() != 0) {
+      return $this->quiz->questions->sortBy('order')->where('released', 1)->last()->order;
+    } else {
+      return null;
+    }
+  }
+
+  public function next() {
+    return (null != $this->quiz->questions->where('order', $this->order + 1)->first())
+                                ? $this->quiz->questions->where('order', $this->order + 1)->first()
+                                : "-1";
   }
 }
