@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Response;
+use App\Question;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ResponseController extends Controller
@@ -31,12 +34,22 @@ class ResponseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
+     public function store(Request $request, Question $question)
+     {
+       $validatedData = $request->validate([
+         'answer' => 'required'
+       ]);
+       $response = new Response;
+       $response->user_id = Auth::user()->id;
+       $response->answer = $validatedData['answer'];
+       //$response->save();
+       $question->responses()->save($response);
+
+       return redirect()->route('question.lobby', compact('question'));
+     }
 
     /**
      * Display the specified resource.
@@ -81,5 +94,35 @@ class ResponseController extends Controller
     public function destroy(Response $response)
     {
         //
+    }
+
+    /**
+     * count the number of submissions so far for a question
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function count(Question $question)
+    {
+        $quiz = $question->quiz;
+        $total_players = -1;
+        $participants = [];
+        $submitted = [];
+
+        // get number of users for this quiz
+        foreach($quiz->questions()->get() as $all_question) {
+          $all_question->responses()->get()->each(function ($response) use (&$participants){
+            $participants[$response->user->id] = 1;
+          });
+        }
+
+        // get number of users for this question
+        $question->responses()->get()->each(function ($response) use (&$submitted){
+          $submitted[$response->user->id] = 1;
+        });
+
+        return response()->json([
+          'count' => count($submitted),
+          'total' => count($participants),]);
     }
 }
