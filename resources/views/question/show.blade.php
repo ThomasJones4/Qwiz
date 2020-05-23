@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.live_quiz', ['all_questions' => $all_questions, 'question' => $question])
 
 @section('content')
     <div class="header bg-gradient-primary py-7 py-lg-8">
@@ -17,18 +17,37 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="text-center mt-7 mb-7">
+                <div class="row justify-content-center">
+                  <form action="{{ route('store.response', [$question]) }}" method="POST">
+                    @csrf
 
+                    <div class="form-group">
+                        <input class="form-control form-control-lg" type="text" id="answer" name="answer">
+                    </div>
+
+                    @error('answer')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    @if ($question->have_i_answered())
+                    <a href="{{ route('question.lobby', $question)}}" class="btn btn-primary" role="button" >Next</a>
+                    @endif
+                  </form>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center mt--7">
+          <div class="row justify-content-center">
+              <p class="text-white" id="response_count"></p>
+          </div>
+        </div>
     </div>
 
-    <div class="text-center mt--7">
-        <div class="row justify-content-center">
-          <a href="#" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Waiting for Quiz Master</span>
-            <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
-          </a>
-        </div>
-    </div>
+
 @endsection
 
 @push('js')
@@ -37,22 +56,23 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question', [$question]) }}',
+      url: '{{ route('response.count', [$question]) }}',
       type: 'get',
       success: function(data){
       // quiz ready, update page
-       clearInterval(interval);
 
-       $('#next_question_btn').attr('href', data.next);
-       $('#next_question_btn_text').text(data.btn_text);
-       $('#next_question_btn_icon').removeClass().addClass('fa fa-play');
+       $('#response_count').text(data['count'] + '/' + data['total'] + ' responded');
+
+             if (data['count'] == data['total']) {
+               clearInterval(interval_res);
+             }
      }
      });
     }
 
     $(document).ready(function(){
      fetchdata();
-     interval = setInterval(fetchdata,2000);
+     interval = setInterval(fetchdata,1000);
     });
     </script>
 @endpush

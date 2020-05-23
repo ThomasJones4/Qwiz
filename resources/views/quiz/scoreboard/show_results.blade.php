@@ -13,8 +13,71 @@
                 </div>
             </div>
 
-        </div>
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">@if ($question->title == 'end-scores') End Scores @else Mid Scores @endif</h3>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-12">
+                    @if (session('status'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('status') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">{{ __('Question') }}</th>
+                                @foreach ($question->quiz->users as $participant)
+                                <th scope="col">{{ $participant->name }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($all_questions as $question)
+                                <tr>
+                                  <td>{{ $question->content }}</td>
+
+                                  @foreach ($question->quiz->users as $participant)
+
+                                    @if ($question->have_i_answered($question))
+                                    <td scope="col">
+                                      @foreach ($participant->question_responses($question) as $response)
+                                        @if ($response->correct == "1")
+                                          <b>{{$response->answer}}</b>
+                                        @else
+                                          <strike>{{$response->answer}}</strike>
+                                        @endif
+                                      </br>
+                                      @endforeach
+                                    </td>
+                                    @else
+                                      <td scope="col">Left Blank</td>
+                                    @endif
+                                  @endforeach
+                                </tr>
+                            @endforeach
+
+                                  <td><b>{{ __('Total') }}</b></td>
+                                  @foreach ($question->quiz->users as $participant)
+                                  <th scope="col">{{ $participant->correct_so_far($quiz) }}</th>
+                                  @endforeach
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <div class="text-center mt--7">
@@ -33,7 +96,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question', [$question]) }}',
+      url: '{{ route('next_question_results', [($question->id + 1)]) }}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

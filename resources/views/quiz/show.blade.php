@@ -13,22 +13,27 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ $quiz->quiz_master->name }}</h1>
+                        <h1 class="text-white">By {{ $quiz->quiz_master->name }}</h1>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6">
+
           <a href="#" id="quiz_start_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span id="quiz_start_btn_text" class="btn-inner--text">Waiting for quiz to start</span>
+            <span id="quiz_start_btn_text" class="btn-inner--text">Waiting for quiz master</span>
             <span class="btn-inner--icon"><i id="quiz_start_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>
+        </div>
     </div>
+
+</div>
+
+  </div>
 @endsection
 
 @push('js')

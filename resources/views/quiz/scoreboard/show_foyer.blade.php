@@ -7,15 +7,14 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">scoreboard</h1>
-                        <h1 class="text-white">lobby</h1>
+                        <h1 class="text-white">foyer</h1>
                         <h1 class="text-white">{{ $question->content }}</h1>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
+    
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
