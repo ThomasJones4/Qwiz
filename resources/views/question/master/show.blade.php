@@ -20,17 +20,7 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <p class="text-white">
-                          Your Answer : {{ $answers->last()->answer }}
-                          @if ($answers->count() > 1)
-                          <br>
-                          Other Answers:
-                            @foreach ($answers as $answer )
-                            <br>
-                              {{$answer->answer}}
-                            @endforeach
-                          @endif
-                        </p>
+
                     </div>
                 </div>
             </div>
@@ -44,8 +34,8 @@
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
-          <a href="#" id="next_question_btn" class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Waiting for Quiz Master</span>
+          <a href="#" id="next_question_btn" class="btn btn-primary btn-lg" role="button" aria-pressed="true">
+            <span id="next_question_btn_text" class="btn-inner--text">Release Next Question</span>
             <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>
@@ -56,13 +46,35 @@
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
     <script>
-    function fetchdata(){
+
+
+    function fetchdata_res(){
      $.ajax({
-      url: '{{ route('next_question', [$question]) }}',
+      url: '{{ route('response.count', [$question]) }}',
       type: 'get',
       success: function(data){
       // quiz ready, update page
-       clearInterval(interval);
+      if (data['count'] != -1) {
+         $('#response_count').text(data['count'] + '/' + data['total'] + ' responded');
+
+         if (data['total'] > 0 && data['count'] == data['total']) {
+           clearInterval(interval_res);
+         }
+      } else {
+        $('#response_count').text('Not Released');
+      }
+
+     }
+     });
+    }
+
+    function fetchdata_next(){
+     $.ajax({
+      url: '{{ route('master_progress_next', [$question]) }}',
+      type: 'get',
+      success: function(data){
+      // quiz ready, update page
+       clearInterval(interval_next);
 
        $('#next_question_btn').attr('href', data.next);
        $('#next_question_btn_text').text(data.btn_text);
@@ -72,26 +84,11 @@
      });
     }
 
-    function fetchdata_res(){
-     $.ajax({
-      url: '{{ route('response.count', [$question]) }}',
-      type: 'get',
-      success: function(data){
-      // quiz ready, update page
-       $('#response_count').text(data['count'] + '/' + data['total'] + ' responded');
-
-       if (data['count'] == data['total']) {
-         clearInterval(interval_res);
-       }
-     }
-     });
-    }
-
     $(document).ready(function(){
-     fetchdata();
      fetchdata_res();
      interval_res = setInterval(fetchdata_res,2000);
-     interval = setInterval(fetchdata,2000);
+     fetchdata_next();
+     interval_next = setInterval(fetchdata_next,2000);
     });
     </script>
 @endpush

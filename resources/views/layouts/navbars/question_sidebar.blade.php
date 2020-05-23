@@ -15,36 +15,67 @@
             <ul class="navbar-nav">
               @foreach ($all_questions as $sidebar_question)
                 <li class="nav-item">
-                      @if ($sidebar_question->is_latest())
-                        @if ($sidebar_question->id == $question->id)
-                            <a class="nav-link" href="#">
-                          <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-dot-circle text-primary"></i><b> {{ $sidebar_question->title }}</b>
-                        </a>
-                        @else
-                        <a class="nav-link" href="#">
-                      <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-dot-circle text-primary"></i> {{ $sidebar_question->title }}
-                    </a>
-                        @endif
-                      @elseif ($sidebar_question->have_i_answered())
-
-                        @if ($sidebar_question->id == $question->id)
-                            <a class="nav-link" href="{{ route('question.show', $sidebar_question) }}">
-                          <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-check text-primary"></i> <b>{{ $sidebar_question->title }}</b>
-                        </a>
-                        @else
-                        <a class="nav-link" href="{{ route('question.show', $sidebar_question) }}">
-                      <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-check text-primary"></i> {{ $sidebar_question->title }}
-                    </a>
-                        @endif
-                      @elseif ($sidebar_question->order < $question->latest())
-                      <a class="nav-link" href="{{ route('question.show', $sidebar_question) }}">
-                      <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-lock-open text-primary"></i>{{ $sidebar_question->title }}
-                      </a>
-                      @else
-                          <a class="nav-link" href="#">
-                      <i>{{ $sidebar_question->order + 1 }}</i><i class="fas fa-lock text-primary"></i> {{ $sidebar_question->title }}
-                    </a>
-                      @endif
+                          @if ($sidebar_question->title == "mid-scores")
+                            <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                              <i>{{ $sidebar_question->order + 1 }}</i>
+                              <i class="fas fa-star text-warning"></i>
+                              @if ($sidebar_question->id == $question->id) <b> @endif
+                                Mid Scores
+                              @if ($sidebar_question->id == $question->id) </b> @endif
+                            </a>
+                          @elseif ($sidebar_question->title == "end-scores")
+                            <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                              <i>{{ $sidebar_question->order + 1 }}</i>
+                              <i class="fas fa-stars text-warning"></i>
+                              @if ($sidebar_question->id == $question->id) <b> @endif
+                                Final Scores
+                              @if ($sidebar_question->id == $question->id) </b> @endif
+                            </a>
+                          @elseif (null != $question->latest() && $sidebar_question->order == $question->latest())
+                            @if ($sidebar_question->have_i_answered())
+                              <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                                <i>{{ $sidebar_question->order + 1 }}</i>
+                                <i class="fas fa-check text-primary"></i>
+                                @if ($sidebar_question->id == $question->id) <b> @endif
+                                  {{ $sidebar_question->title }}
+                                @if ($sidebar_question->id == $question->id) </b> @endif
+                              </a>
+                            @else
+                              <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                                <i>{{ $sidebar_question->order + 1 }}</i>
+                                <i class="fas fa-dot-circle text-primary"></i>
+                                @if ($sidebar_question->id == $question->id) <b> @endif
+                                  {{ $sidebar_question->title }}
+                                @if ($sidebar_question->id == $question->id) </b> @endif
+                              </a>
+                            @endif
+                          @elseif (null != $question->latest() && $sidebar_question->order < $question->latest())
+                            @if ($sidebar_question->have_i_answered())
+                              <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                                <i>{{ $sidebar_question->order + 1 }}</i>
+                                <i class="fas fa-check text-primary"></i>
+                                @if ($sidebar_question->id == $question->id) <b> @endif
+                                  {{ $sidebar_question->title }}
+                                @if ($sidebar_question->id == $question->id) </b> @endif
+                              </a>
+                            @else
+                              <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
+                                <i>{{ $sidebar_question->order + 1 }}</i>
+                                <i class="fas fa-lock-open text-primary"></i>
+                                @if ($sidebar_question->id == $question->id) <b> @endif
+                                  {{ $sidebar_question->title }}
+                                @if ($sidebar_question->id == $question->id) </b> @endif
+                              </a>
+                            @endif
+                          @else
+                            <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="#" @endif>
+                              <i>{{ $sidebar_question->order + 1 }}</i>
+                              <i class="fas fa-lock text-primary"></i>
+                              @if ($sidebar_question->id == $question->id) <b> @endif
+                                {{ $sidebar_question->title }}
+                              @if ($sidebar_question->id == $question->id) </b> @endif
+                            </a>
+                          @endif
                 </li>
                 @endforeach
             </ul>

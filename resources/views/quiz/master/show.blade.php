@@ -1,4 +1,4 @@
-@extends('layouts.live_quiz', ['all_questions' => $all_questions, 'question' => $question, 'master' => true])
+@extends('layouts.live_quiz', ['all_questions' => $all_questions, 'question' => $question])
 
 @section('content')
     <div class="header bg-gradient-primary py-7 py-lg-8">

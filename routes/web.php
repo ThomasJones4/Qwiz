@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
   Route::get('questions/{question}/next', 'QuestionController@show_next')->name('question.lobby');
+  Route::get('questions/{question}/master', 'QuestionController@master')->name('question.master');
+  Route::get('questions/{question}/master/next', 'QuestionController@master_next')->name('question.master.next');
+  Route::get('questions/{question}/master/this', 'QuestionController@master_this')->name('question.master.this');
 
   Route::post('question/{question}/responses/store', 'ResponseController@store')->name('store.response');
 

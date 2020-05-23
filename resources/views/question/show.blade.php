@@ -1,4 +1,4 @@
-@extends('layouts.live_quiz', ['all_questions' => $all_questions, 'question' => $question])
+@extends('layouts.live_quiz', ['all_questions' => $all_questions, 'question' => $question, 'master' => false])
 
 @section('content')
     <div class="header bg-gradient-primary py-7 py-lg-8">
@@ -18,6 +18,11 @@
                 </div>
             </div>
             <div class="text-center mt-7 mb-7">
+              <div class="text-center mt--7">
+                <div class="row justify-content-center">
+                    <p class="text-white" id="response_count"></p>
+                </div>
+              </div>
                 <div class="row justify-content-center">
                   <form action="{{ route('store.response', [$question]) }}" method="POST">
                     @csrf
@@ -40,11 +45,7 @@
 
             </div>
         </div>
-        <div class="text-center mt--7">
-          <div class="row justify-content-center">
-              <p class="text-white" id="response_count"></p>
-          </div>
-        </div>
+
     </div>
 
 
@@ -69,6 +70,7 @@
      }
      });
     }
+
 
     $(document).ready(function(){
      fetchdata();
