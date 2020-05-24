@@ -8,7 +8,7 @@
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">scoreboard</h1>
                         <h1 class="text-white">foyer</h1>
-                        <h1 class="text-white">{{ $question->content }}</h1>
+                        <h1 class="text-white">{{ $question->question }}</h1>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question', [$question]) }}',
+      url: '{{ route('next_question', [$question]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

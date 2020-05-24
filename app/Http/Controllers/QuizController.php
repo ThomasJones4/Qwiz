@@ -6,6 +6,7 @@ use App\Quiz;
 use App\Question;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Faker\Factory as Factory;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
@@ -27,7 +28,7 @@ class QuizController extends Controller
      */
     public function create()
     {
-        //
+        return view('quiz.create');
     }
 
     /**
@@ -38,7 +39,16 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $validatedData = $request->validate([
+        'name' => 'required',
+        'scheduled_start' => 'required',
+      ]);
+      $faker = Factory::create();
+      $validatedData['invite_code'] = $faker->randomNumber(8);
+
+      $new_quiz = Auth::user()->my_quizzes()->create($validatedData);
+
+      return redirect()->route('quiz.master.show', $new_quiz);
     }
 
     /**
@@ -49,12 +59,7 @@ class QuizController extends Controller
      */
     public function show(Quiz $quiz)
     {
-      $response = Gate::inspect('view', $quiz);
-
-      if (!$response->allowed()) {
-        $error_message = $response->message();
-        return view('layouts.error', compact('error_message'));
-      }
+      Gate::authorize('view', $quiz);
 
       return view('quiz.show', compact('quiz'));
     }
@@ -65,15 +70,21 @@ class QuizController extends Controller
      * @param  \App\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
+    public function show_master(Quiz $quiz)
+    {
+      Gate::authorize('view_master', $quiz);
+
+      return view('quiz.master.show', compact('quiz'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
     public function index_mine()
     {
-      //$response = Gate::inspect('view', $quiz);
-
-      // if (!$response->allowed()) {
-      //   $error_message = $response->message();
-      //   return view('layouts.error', compact('error_message'));
-      // }
-
       $owned_quizzes = Auth::user()->my_quizzes()->get();
       $participant_quizzes = Auth::user()->quizzes()->get();
       return view('quiz.my_index', compact('owned_quizzes', 'participant_quizzes'));

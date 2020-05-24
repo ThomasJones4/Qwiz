@@ -13,7 +13,7 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ $question->content }}</h1>
+                        <h1 class="text-white">{{ $question->question }}</h1>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question', [$question]) }}',
+      url: '{{ route('next_question', [$question]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page
@@ -74,7 +74,7 @@
 
     function fetchdata_res(){
      $.ajax({
-      url: '{{ route('response.count', [$question]) }}',
+      url: '{{ route('response.count', [$question]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Question;
+use App\Quiz;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -20,13 +21,57 @@ class QuestionController extends Controller
     }
 
     /**
+     * move the question up a level
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function move_up(Question $question)
+    {
+
+        Gate::authorize('move_up', $question);
+
+        $questions = $question->quiz->questions->sortBy('order');
+
+        $question_innocent = $questions->where('order', $question->order - 1)->first();
+        $question_innocent->order++;
+        $question_innocent->save();
+        $question->order--;
+        $question->save();
+
+        return redirect()->back();
+
+    }
+
+    /**
+     * move the question down a level
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function move_down(Question $question)
+    {
+
+      Gate::authorize('move_down', $question);
+
+      $questions = $question->quiz->questions->sortBy('order');
+
+      $question_innocent = $questions->where('order', $question->order + 1)->first();
+      $question_innocent->order--;
+      $question_innocent->save();
+      $question->order++;
+      $question->save();
+
+      return redirect()->back();
+
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Quiz $quiz)
     {
-        //
+      return view('question.create', compact('quiz'));
     }
 
     /**
@@ -35,8 +80,22 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Question $question)
+    public function store(Request $request, Quiz $quiz)
     {
+      $validatedData = $request->validate([
+        'title' => 'required',
+        'question' => 'required',
+        'correct_answer' => '',
+      ]);
+
+      $validatedData['order'] = ($quiz->questions()->get()->count() > 0)
+          ? $quiz->questions->sortBy('order')->last()->order + 1
+          : 0 ;
+
+      $quiz->questions()->create($validatedData);
+
+      return redirect()->route('quiz.master.show', $quiz);
+
     }
 
     /**
@@ -158,7 +217,7 @@ class QuestionController extends Controller
     {
 
       Gate::authorize('view', $question);
-
+      //dd(Auth::user());
       $quiz = $question->quiz;
 
       // if next question, set variable else set -1
@@ -272,7 +331,7 @@ class QuestionController extends Controller
      */
     public function edit(Question $question)
     {
-        //
+        return view('question.edit', compact('question'));
     }
 
     /**
@@ -284,7 +343,15 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
-        //
+      $validatedData = $request->validate([
+        'title' => 'required',
+        'question' => 'required',
+        'correct_answer' => '',
+      ]);
+
+      $question->update($validatedData);
+
+      return redirect()->route('quiz.master.show', $question->quiz);
     }
 
     /**

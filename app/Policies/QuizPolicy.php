@@ -32,7 +32,6 @@ class QuizPolicy
      */
     public function view(User $user, Quiz $quiz)
     {
-
         return ($user->quizzes()->get()->contains($quiz) || Gate::inspect('view_master', $quiz)->allowed())
                   ? Response::allow()
                   : Response::deny('You can not view this quiz. (001)');

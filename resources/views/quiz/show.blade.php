@@ -42,7 +42,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('quiz_ready', [$quiz]) }}',
+      url: '{{ route('quiz_ready', [$quiz]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

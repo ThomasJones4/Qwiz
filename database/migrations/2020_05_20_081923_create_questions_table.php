@@ -18,10 +18,10 @@ class CreateQuestionsTable extends Migration
             $table->unsignedBigInteger('quiz_id')->unsigned()->index();
             $table->foreign('quiz_id')->references('id')->on('quizzes');
             $table->string('title');
-            $table->string('content');
-            $table->boolean('released');
+            $table->string('question');
+            $table->boolean('released')->default('0');
             $table->boolean('order');
-            $table->boolean('correct_answer')->nullable();
+            $table->string('correct_answer')->nullable();
             $table->timestamps();
         });
     }

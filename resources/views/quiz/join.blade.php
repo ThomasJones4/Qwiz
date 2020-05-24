@@ -7,7 +7,10 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">{{ $quiz->name }}</h1>
-                        <h3 class="text-white">{{ $quiz->quiz_master->name }}</h3>
+                        <h3 class="text-white">Quiz Master: {{ $quiz->quiz_master->name }}</h3>
+                        @can('view', $quiz)
+                          <h3 class="text-white"><a class="text-white" href="{{ route('show.join.quiz', $quiz) }}" >{{ route('show.join.quiz', $quiz) }}</a></h3>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -18,14 +21,21 @@
 
                     <div class="form-group">
                         <label class="form-control-label text-white" for="invite_code">Invite Code</label>
-                        <input class="form-control form-control-lg" type="text" placeholder="00000000" id="invite_code" name="invite_code">
+                        @can('view', $quiz)
+                          <input class="form-control form-control-lg" type="text" style="text-align:center;" value="{{ $quiz->invite_code }}" id="invite_code" name="invite_code">
+                        @elsecan
+                          <input class="form-control form-control-lg" type="text" placeholder="00000000" id="invite_code" name="invite_code">
+                        @endcan
                     </div>
 
                     @error('invite_code')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
 
-                    <button class="btn btn-primary" type="submit">Join</button>
+
+                    @cannot('view_master', $quiz)
+                      <button class="btn btn-primary" type="submit">Join</button>
+                    @endcan
                   </form>
                 </div>
             </div>

@@ -53,6 +53,36 @@ class QuestionPolicy
     }
 
     /**
+     * Determine whether the question can be moved up
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function move_up(User $user, Question $question)
+    {
+      Gate::authorize('view_master', $question->quiz);
+
+        return ($question->order != "0")
+          ? Response::allow()
+          : Response::deny("Didn't think we'd every see you here. (004_up)");
+    }
+
+    /**
+     * Determine whether the question can be moved down
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function move_down(User $user, Question $question)
+    {
+      Gate::authorize('view_master', $question->quiz);
+
+      return ($question->order != $question->quiz->questions->count() - 1)
+        ? Response::allow()
+        : Response::deny("Didn't think we'd every see you here. (004_down)");
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user

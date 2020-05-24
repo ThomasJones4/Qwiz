@@ -8,7 +8,7 @@
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">scoreboard</h1>
                         <h1 class="text-white">results</h1>
-                        <h1 class="text-white">{{ $question->content }}</h1>
+                        <h1 class="text-white">{{ $question->question }}</h1>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                         <tbody>
                             @foreach ($all_questions as $question)
                                 <tr>
-                                  <td>{{ $question->content }}</td>
+                                  <td>{{ $question->question }}</td>
 
                                   @foreach ($question->quiz->users as $participant)
 
@@ -96,7 +96,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question_results', [($question->id + 1)]) }}',
+      url: '{{ route('next_question_results', [($question->id + 1)]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

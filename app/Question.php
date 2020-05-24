@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\Auth;
 class Question extends Model
 {
 
+  protected $fillable = ['title', 'question', 'order', 'correct_answer'];
+
   public function quiz() {
     return $this->belongsTo(Quiz::class);
   }
 
   public function responses() {
     return $this->hasMany(Response::class);
+  }
+
+  public function media() {
+    return $this->hasMany(Media::class);
   }
 
   public function have_i_answered() {

@@ -28,11 +28,24 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 
   Route::get('quizzes/mine', 'QuizController@index_mine')->name('show.my.quiz');
+  Route::get('quizzes/{quiz}/master', 'QuizController@show_master')->name('quiz.master.show');
 
-  Route::resource('quizzes', 'QuizController', ['only' => ['show']])->names([
+
+
+  Route::resource('quizzes', 'QuizController', ['only' => ['show', 'create', 'store']])->names([
     'show' => 'quiz.show']);
 
-  Route::resource('questions', 'QuestionController', ['only' => ['show']])->names([
+  Route::get('quizzes/{quiz}/questions/create', 'QuestionController@create')->name('quiz.question.create');
+  Route::post('quizzes/{quiz}/questions', 'QuestionController@store')->name('quiz.question.store');
+  Route::get('questions/{question}/up', 'QuestionController@move_up')->name('question.move.up');
+  Route::get('questions/{question}/down', 'QuestionController@move_down')->name('question.move.down');
+
+  Route::get('questions/{question}/media/create', 'MediaController@create')->name('media.create');
+  Route::post('questions/{question}/media', 'MediaController@store')->name('media.store');
+  Route::get('questions/{question}/media/{media}/destroy', 'MediaController@destroy')->name('media.delete');
+
+
+  Route::resource('questions', 'QuestionController', ['only' => ['show', 'edit', 'update']])->names([
     'show' => 'question.show',
     ]);
 

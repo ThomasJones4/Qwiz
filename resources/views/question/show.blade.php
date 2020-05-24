@@ -13,7 +13,7 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ $question->content }}</h1>
+                        <h1 class="text-white">{{ $question->question }}</h1>
                     </div>
                 </div>
             </div>
@@ -28,16 +28,20 @@
                     @csrf
 
                     <div class="form-group">
-                        <input class="form-control form-control-lg" type="text" id="answer" name="answer">
+                        <input class="form-control form-control-lg" type="text" id="answer" name="answer" >
                     </div>
 
                     @error('answer')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
 
-                    <button class="btn btn-primary" type="submit">Submit</button>
                     @if ($question->have_i_answered())
-                    <a href="{{ route('question.lobby', $question)}}" class="btn btn-primary" role="button" >Next</a>
+                    <button class="btn btn-primary" type="submit">Submit Again</button>
+                    <h2 class="text-white"> or </h2>
+                    <a href="{{ route('question.lobby', $question)}}" class="btn btn-primary" role="button">Go to next question</a>
+                    @else
+                    <button class="btn btn-primary" type="submit">Submit</button>
+
                     @endif
                   </form>
 
@@ -57,7 +61,7 @@
     <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('response.count', [$question]) }}',
+      url: '{{ route('response.count', [$question]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page

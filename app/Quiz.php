@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
 
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'invite_code', 'name'];
 
     public function questions() {
       return $this->hasMany(Question::class);
@@ -37,4 +37,5 @@ class Quiz extends Model
     public function is_live() {
       return (null != $this->invite_code);
     }
+
 }
