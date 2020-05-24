@@ -82,6 +82,9 @@ class QuestionController extends Controller
      */
     public function store(Request $request, Quiz $quiz)
     {
+      Gate::authorize('view_master', $quiz);
+
+
       $validatedData = $request->validate([
         'title' => 'required',
         'question' => 'required',
@@ -331,6 +334,8 @@ class QuestionController extends Controller
      */
     public function edit(Question $question)
     {
+        Gate::authorize('view_master', $question);
+
         return view('question.edit', compact('question'));
     }
 
@@ -343,6 +348,8 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
+      Gate::authorize('view_master', $question);
+
       $validatedData = $request->validate([
         'title' => 'required',
         'question' => 'required',

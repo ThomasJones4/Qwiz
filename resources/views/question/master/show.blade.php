@@ -20,7 +20,31 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
+                      <div class="container">
+                        <div class="row">
 
+                      @php $count = 0 @endphp
+                      @foreach($question->media as $media)
+                      @php $count++ @endphp
+                            <div class="col-sm">
+                              <h3 class="text-white">{{$count}})</h3>
+                                  @if ($media->type == 'image')
+                                    <img max-width="20%" height="auto" src="{{ asset('quiz-media') . '/' .$media->url}}">
+                                  @elseif ($media->type == 'video')
+                                    <video width="400" controls>
+                                      <source src="{{ asset('quiz-media') . '/' .$media->url}}" type="video/{{$media->extension}}">
+                                      Your browser does not support HTML video.
+                                    </video>
+                                  @elseif ($media->type == 'audio')
+                                  <audio controls>
+                                    <source src="{{ asset('quiz-media') . '/' .$media->url}}" type="audio/mp3">
+                                    Your browser does not support the audio element.
+                                  </audio>
+                                  @endif
+                                </div>
+                            @endforeach
+                          </div>
+                        </div>
                     </div>
                 </div>
             </div>

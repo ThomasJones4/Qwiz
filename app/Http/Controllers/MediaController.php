@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Question;
 use App\Media;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class MediaController extends Controller
@@ -27,6 +28,8 @@ class MediaController extends Controller
    */
   public function store(Request $request, Question $question)
   {
+    Gate::authorize('view_master', $question);
+
     $request->validate([
       'file' => 'required|mimes:gif,png,jpeg,jpg,avi,mvv,mov,mp4,mp3,acc,wav,mpga',
     ]);
@@ -68,8 +71,8 @@ class MediaController extends Controller
        */
       public function destroy(Question $question, Media $media)
       {
-          $question = $media->question;
-          //TODO: Gate
+          Gate::authorize('view_master', $question);
+
           $media->delete();
 
           return redirect()->route('questions.edit', $question);

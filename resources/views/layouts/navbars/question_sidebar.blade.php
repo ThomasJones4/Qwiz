@@ -31,7 +31,7 @@
                                 Final Scores
                               @if ($sidebar_question->id == $question->id) </b> @endif
                             </a>
-                          @elseif (null != $question->latest() && $sidebar_question->order == $question->latest())
+                          @elseif ((null != $question->latest() || $question->latest() > -1) && ($sidebar_question->order == $question->latest()) == "1")
                             @if ($sidebar_question->have_i_answered())
                               <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
                                 <i>{{ $sidebar_question->order + 1 }}</i>

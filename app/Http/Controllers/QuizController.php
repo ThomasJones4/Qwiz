@@ -133,6 +133,8 @@ class QuizController extends Controller
      */
     public static function quiz_ready(Quiz $quiz)
     {
+      Gate::authorize('view', $quiz);
+
       $first_question = $quiz->questions->sortBy('order')->first();
 
       if ($first_question->released == "0") {

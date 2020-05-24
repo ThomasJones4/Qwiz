@@ -83,6 +83,17 @@ class QuestionPolicy
     }
 
     /**
+     * Determine whether the question can be viewed
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function view_master(User $user, Question $question)
+    {
+      return Gate::authorize('view_master', $question->quiz);
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
