@@ -18,8 +18,8 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-Auth::routes();
 
+Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);
@@ -29,8 +29,6 @@ Route::group(['middleware' => 'auth'], function () {
 
   Route::get('quizzes/mine', 'QuizController@index_mine')->name('show.my.quiz');
   Route::get('quizzes/{quiz}/master', 'QuizController@show_master')->name('quiz.master.show');
-
-
 
   Route::resource('quizzes', 'QuizController', ['only' => ['show', 'create', 'store']])->names([
     'show' => 'quiz.show']);
@@ -58,5 +56,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 
   Route::get('join/{quiz}', 'QuizController@show_join')->name('show.join.quiz');
+  Route::get('🎲/{quiz}', function ($quiz) {
+      return redirect(route('show.join.quiz', $quiz));
+  })->name('show.join.quiz.emoji');
   Route::post('join/{quiz}', 'QuizController@join')->name('join.quiz');
 });

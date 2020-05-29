@@ -9,7 +9,7 @@
                         <h1 class="text-white">{{ $quiz->name }}</h1>
                         <h3 class="text-white">Quiz Master: {{ $quiz->quiz_master->name }}</h3>
                         @can('view', $quiz)
-                          <h3 class="text-white"><a class="text-white" href="{{ route('show.join.quiz', $quiz) }}" >{{ route('show.join.quiz', $quiz) }}</a></h3>
+                          <h3 class="text-white"><a class="text-white" href="{!! route('show.join.quiz.emoji', $quiz) !!}" >{!! urldecode(route('show.join.quiz.emoji', $quiz)) !!}</a></h3>
                         @endcan
                     </div>
                 </div>
