@@ -6,7 +6,6 @@ use App\Quiz;
 use App\Question;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Faker\Factory as Factory;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
@@ -43,8 +42,8 @@ class QuizController extends Controller
         'name' => 'required',
         'scheduled_start' => 'required',
       ]);
-      $faker = Factory::create();
-      $validatedData['invite_code'] = $faker->randomNumber(8);
+
+      $validatedData['invite_code'] = rand(10000001, 99999999);
 
       $new_quiz = Auth::user()->my_quizzes()->create($validatedData);
 
