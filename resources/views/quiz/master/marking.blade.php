@@ -6,9 +6,7 @@
             <div class="header-body text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">scoreboard</h1>
-                        <h1 class="text-white">results</h1>
-                        <h1 class="text-white">{{ $question->question }}</h1>
+                        <h1 class="text-white">Quiz Marking</h1>
                     </div>
                 </div>
             </div>
@@ -17,8 +15,7 @@
                 <div class="card-header border-0">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 class="mb-0">@if ($question->title == 'end-scores') End Scores @else Mid Scores @endif</h3>
-                        </div>
+                            </div>
                     </div>
                 </div>
 
@@ -37,25 +34,31 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Question') }}</th>
-                                @foreach ($question->quiz->users as $participant)
+                                @foreach ($quiz->users as $participant)
                                 <th scope="col">{{ $participant->name }}</th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($all_questions as $loop_question)
+                            @foreach ($all_questions as $question)
+                            @if ($question->title != "mid-scores")
                                 <tr>
-                                  <td>{{ $question->$loop_question }}</td>
+                                  <td>{{ $question->question }}</td>
 
-                                  @foreach ($loop_question->quiz->users as $participant)
+                                  @foreach ($question->quiz->users as $participant)
 
-                                    @if ($question->have_i_answered($loop_question))
+                                    @if ($question->have_i_answered($question))
                                     <td scope="col">
-                                      @foreach ($participant->question_responses($loop_question) as $response)
+                                      @foreach ($participant->question_responses($question)->sortByDesc('id') as $response)
+                                      @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest: @endif
                                         @if ($response->correct == "1")
-                                          <b>{{$response->answer}}</b>
+                                          {{$response->answer}} <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-times"></i>
+                                          </a>
                                         @else
-                                          <strike>{{$response->answer}}</strike>
+                                        <strike>{{$response->answer}}<strike> <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fas fa-check"></i>
+                                        </a>
                                         @endif
                                       </br>
                                       @endforeach
@@ -65,12 +68,9 @@
                                     @endif
                                   @endforeach
                                 </tr>
+                                @endif
                             @endforeach
 
-                                  <td><b>{{ __('Total') }}</b></td>
-                                  @foreach ($question->quiz->users as $participant)
-                                  <th scope="col">{{ $participant->correct_so_far($quiz) }}</th>
-                                  @endforeach
                                 </tr>
                         </tbody>
                     </table>
@@ -83,8 +83,8 @@
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
-          <a href="#" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Waiting for Quiz Master</span>
+          <a href="{{ route('quiz.finish.marking', $quiz) }}" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+            <span id="next_question_btn_text" class="btn-inner--text">Release Scores and next question</span>
             <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>
@@ -94,10 +94,10 @@
 @push('js')
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
-    <script>
+    <!-- <script>
     function fetchdata(){
      $.ajax({
-      url: '{{ route('next_question_results', [($question->id)]) }}?api_token={{auth()->user()->api_token}}',
+      url: '{{ route('next_question_results', [($question->id + 1)]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page
@@ -124,5 +124,5 @@
      fetchdata();
      interval = setInterval(fetchdata,2000);
     });
-    </script>
+    </script> -->
 @endpush

@@ -31,6 +31,28 @@ class ResponseController extends Controller
     }
 
     /**
+     * mark the response correct
+     *
+     * @param  \App\Response  $response
+     * @return \Illuminate\Http\Response
+     */
+    public function mark_correct(Response $response)
+    {
+        //
+    }
+
+    /**
+     * mark the response correct
+     *
+     * @param  \App\Response  $response
+     * @return \Illuminate\Http\Response
+     */
+    public function mark_incorrect(Response $response)
+    {
+        //
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

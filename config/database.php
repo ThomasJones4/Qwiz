@@ -43,12 +43,13 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('RDS_HOSTNAME', '127.0.0.1'),
             'port' => env('RDS_PORT', '3306'),
-            'database' => env('RDS_DB_NAME', 'laravel_bigheffalockdownquiz'),
+            'database' => env('RDS_DB_NAME', 'laravel_bigheffalockdownquiz_testing'),
             'username' => env('RDS_USERNAME', 'root'),
             'password' => env('RDS_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),

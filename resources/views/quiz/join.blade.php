@@ -23,7 +23,7 @@
                         <label class="form-control-label text-white" for="invite_code">Invite Code</label>
                         @can('view', $quiz)
                           <input class="form-control form-control-lg" type="text" style="text-align:center;" value="{{ $quiz->invite_code }}" id="invite_code" name="invite_code">
-                        @elsecan
+                        @else
                           <input class="form-control form-control-lg" type="text" placeholder="00000000" id="invite_code" name="invite_code">
                         @endcan
                     </div>

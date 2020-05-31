@@ -144,6 +144,78 @@ class QuizController extends Controller
     }
 
     /**
+     * start the quiz
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
+    public static function start(Quiz $quiz)
+    {
+      Gate::authorize('view_master', $quiz);
+
+      $first_question = $quiz->questions->sortBy('order')->first();
+
+      $first_question->released = "1";
+      $first_question->save();
+
+      return redirect()->route('question.master', $first_question);
+    }
+
+    /**
+     * finish the quiz
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
+    public static function finish(Quiz $quiz)
+    {
+      Gate::authorize('view_master', $quiz);
+
+      $quiz->invite_code = null;
+      $quiz->save;
+
+      dd('idealy an, now default, end screen showing what happend etc..');
+    }
+
+
+    /**
+     * show marking screen for questions so far
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function mark(Quiz $quiz)
+    {
+
+      Gate::authorize('view_master', $quiz);
+
+      $all_questions = $quiz->questions->where('released', "1")->sortBy('order');
+
+      return view('quiz.master.marking', compact('quiz', 'all_questions'));
+
+    }
+
+    /**
+     * complete marking screen for first unreleased score question
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function mark_finish(Quiz $quiz)
+    {
+
+      Gate::authorize('view_master', $quiz);
+
+      $first_unreleased = $quiz->questions->where('released', "0")->sortBy('order')->first();
+      $first_unreleased->released = "1";
+      $first_unreleased->save();
+
+      return redirect()->route('question.master', $first_unreleased);
+
+    }
+
+
+    /**
      * join a quiz
      *
      * @param  \App\Quiz  $quiz

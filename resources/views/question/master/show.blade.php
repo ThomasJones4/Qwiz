@@ -59,7 +59,7 @@
     <div class="text-center mt--7">
         <div class="row justify-content-center">
           <a href="#" id="next_question_btn" class="btn btn-primary btn-lg" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Release Next Question</span>
+            <span id="next_question_btn_text" class="btn-inner--text">Loading ...</span>
             <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>

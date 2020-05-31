@@ -9,12 +9,49 @@
                   <div class="card shadow">
                       <div class="card-header border-0">
                           <div class="row align-items-center">
-                              <div class="col-6">
+                              <div class="col-3">
                                   <h3 class="mb-0">{{ $quiz->name }} Questions <a href="{{ route('show.join.quiz', $quiz) }}">{{ $quiz->invite_code }}</h3>
+                                  <input type="hidden" dusk="invite_code" value="{{ $quiz->invite_code }}">
+                                  <input type="hidden" dusk="quiz_id" value="{{ $quiz->id }}">
                               </div>
-                              <div class="col-6 text-right">
+                              <div class="col-9 text-right">
                                 <a href="{{ route('quiz.question.create', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add new Question') }}</a>
+                                <a href="{{ route('quiz.question.create.score.break', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add result screen') }}</a>
+                                @if ($quiz->questions->count() > 0)
+                                  <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-notification" >{{ __('Start Quiz 🎉') }}</a>
+                                @endif
                               </div>
+                                <!-- <button type="button" class="btn btn-block btn-warning mb-3" >Notification</button> -->
+                                <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                              <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                                  <div class="modal-content bg-gradient-danger">
+
+                                      <div class="modal-header">
+                                          <h6 class="modal-title" id="modal-title-notification">Your about to start the quiz</h6>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">×</span>
+                                          </button>
+                                      </div>
+
+                                      <div class="modal-body">
+
+                                          <div class="py-3 text-center">
+                                              <i class="fa fa-users fa-3x"></i>
+                                              <h4 class="heading mt-4">Is everybody ready?</h4>
+                                              <p>Ensure everyone has joined the quiz before starting</p>
+                                          </div>
+
+                                      </div>
+
+                                      <div class="modal-footer">
+                                          <a href="{{ route('quiz.start', $quiz) }}" class="btn btn-white" >Yes, everyones here. Let's Go!</a>
+                                          <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Wait</button>
+                                      </div>
+
+                                  </div>
+                              </div>
+
+                            </div>
                           </div>
                       </div>
 
@@ -44,8 +81,8 @@
                                 @foreach ($quiz->questions->sortBy('order') as $question)
                                     <tr>
                                       <td>{{ $question->order + 1 }}</td>
-                                      <td>{{ $question->title }}</td>
-                                      <td>{{ $question->question }}</td>
+                                      <td>@if ($question->title == "mid-scores") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
+                                      <td>@if ($question->title == "mid-scores") @else {{ $question->question }} @endif</td>
 
                                       <td>
                                         <a class="btn btn-sm btn-icon-only text-light" href="{{ route('questions.edit', $question) }}" role="button">

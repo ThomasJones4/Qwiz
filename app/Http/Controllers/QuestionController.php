@@ -33,6 +33,9 @@ class QuestionController extends Controller
         $questions = $question->quiz->questions->sortBy('order');
 
         $question_innocent = $questions->where('order', $question->order - 1)->first();
+        if ($question_innocent->released == "1" || $question->released == "1" ) {
+          return redirect()->back();
+        }
         $question_innocent->order++;
         $question_innocent->save();
         $question->order--;
@@ -55,6 +58,9 @@ class QuestionController extends Controller
       $questions = $question->quiz->questions->sortBy('order');
 
       $question_innocent = $questions->where('order', $question->order + 1)->first();
+      if ($question_innocent->released == "1" || $question->released == "1" ) {
+        return redirect()->back();
+      }
       $question_innocent->order--;
       $question_innocent->save();
       $question->order++;
@@ -102,6 +108,31 @@ class QuestionController extends Controller
     }
 
     /**
+     * create and add a results break
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function create_score_break(Request $request, Quiz $quiz)
+    {
+      Gate::authorize('view_master', $quiz);
+
+      $scores = [];
+      $scores['title'] = 'mid-scores';
+      $scores['question'] = '-';
+      $scores['correct_answer'] = '-';
+
+      $scores['order'] = ($quiz->questions()->get()->count() > 0)
+          ? $quiz->questions->sortBy('order')->last()->order + 1
+          : 0 ;
+
+      $quiz->questions()->create($scores);
+
+      return redirect()->route('quiz.master.show', $quiz);
+
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Question  $question
@@ -112,7 +143,7 @@ class QuestionController extends Controller
 
       Gate::authorize('view', $question);
 
-      $all_questions = $question->quiz->questions;
+      $all_questions = $question->quiz->questions->sortBy('order');
 
       $foyer = ['mid-scores','end-scores'];
 
@@ -135,11 +166,13 @@ class QuestionController extends Controller
 
       Gate::authorize('view_master', $question->quiz);
 
-      $all_questions = $question->quiz->questions;
+      $all_questions = $question->quiz->questions->sortBy('order');
 
       return view('question.master.show', compact('question', 'all_questions'));
 
     }
+
+
     /**
      * Display the specified resource.
      *
@@ -150,7 +183,7 @@ class QuestionController extends Controller
     {
         Gate::authorize('view', $question);
 
-        $all_questions = $question->quiz->questions;
+        $all_questions = $question->quiz->questions->sortBy('order');
 
         $answers = Auth::user()->responses()->where('question_id', $question->id)->get();
 
@@ -159,7 +192,7 @@ class QuestionController extends Controller
         if (in_array($question->title, $results)) {
           $quiz = $question->quiz;
 
-          $all_questions = $question->quiz->questions->where('order', '<', $question->order);
+          $all_questions = $question->quiz->questions->where('order', '<', $question->order)->sortBy('order');
 
           return view('quiz.scoreboard.show_results', compact('quiz', 'question', 'all_questions'));
         }
@@ -179,7 +212,7 @@ class QuestionController extends Controller
 
         $next_question = $question->next();
         if ($next_question != "-1") {
-          $all_questions = $question->quiz->questions;
+          $all_questions = $question->quiz->questions->sortBy('order');
 
           $next_question->released = "1";
           $next_question->save();
@@ -201,7 +234,7 @@ class QuestionController extends Controller
     {
         Gate::authorize('view_master', $question->quiz);
 
-        $all_questions = $question->quiz->questions;
+        $all_questions = $question->quiz->questions->sortBy('order');
 
         $question->released = "1";
         $question->save();
@@ -219,20 +252,21 @@ class QuestionController extends Controller
     public static function next(Question $question, $force = false)
     {
 
-      Gate::authorize('view', $question);
+      Gate::authorize('view', $question->quiz);
       //dd(Auth::user());
       $quiz = $question->quiz;
 
       // if next question, set variable else set -1
-      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->first())
-                                  ? $quiz->questions->where('order', $question->order + 1)->first()
+      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first())
+                                  ? $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first()
                                   : "-1";
 
-
       // TODO: replace $next_question->id with the url for the next question
-      if ($next_question == "-1") {
+      if ($next_question == "-1" && $question->released == "1" && $question->title == "mid-scores") {
+        return response()->json(["next" => route('question.lobby', $question), "type" => 'end-scores', 'btn_text' => 'View End of Game Results'], 200);
+      } else if ($next_question == "-1" && $question->released == "1") {
           // no more questions
-          return response()->json(["next" => null, "type" => null], 200);
+          return response()->json(["next" => "#", "type" => 'finish', 'btn_text' => 'No more questions '], 200);
 
       } else if ($next_question->released == "1") {
         // next question ready
@@ -278,16 +312,19 @@ class QuestionController extends Controller
       $quiz = $question->quiz;
 
       // if next question, set variable else set -1
-      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->first())
-                                  ? $quiz->questions->where('order', $question->order + 1)->first()
+      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first())
+                                  ? $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first()
                                   : "-1";
 
 
       // TODO: replace $next_question->id with the url for the next question
-      if ($next_question == "-1") {
+      if ($next_question == "-1" && $question->released == "1") {
           // no more questions
-          return response()->json(["next" => null, "type" => null], 200);
+          //return response()->json(["next" => null, "type" => null], 200);
+          return response()->json(["next" => route('quiz.finish', $quiz), "type" => 'finish', 'btn_text' => 'Finish quiz'], 200);
 
+      } else if ($question->released == "1" && $question->title == 'mid-scores') {
+        return response()->json(["next" => route('quiz.mark', $question->quiz), "type" => 'question', 'btn_text' => 'Mark answers so far'], 200);
       } else if ($question->released == "1") {
         return response()->json(["next" => route('question.master', $next_question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
       } else if ($question->released == "0" && $quiz->questions->sortBy('order')->where('released', "1")->count() == $question->order) {
@@ -300,7 +337,7 @@ class QuestionController extends Controller
 
 
     /**
-     * get the progress of the quiz
+     * force the next question to be returned (called from results pages only)
      *
      * @param  \App\Quiz  $quiz
      * @return \Illuminate\Http\Response
@@ -308,18 +345,20 @@ class QuestionController extends Controller
     public static function next_force(Question $question)
     {
 
-      Gate::authorize('view', $question->quiz);
-
       $quiz = $question->quiz;
 
-      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->first())
-                                  ? $quiz->questions->where('order', $question->order + 1)->first()
+      Gate::authorize('view', $quiz);
+
+      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first())
+                                  ? $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first()
                                   : "-1";
 
 
         // TODO: replace $next_question->id with the url for the next question
         if ($next_question != "-1") {
           return QuestionController::next($next_question, true);
+        } else {
+
         }
 
       }

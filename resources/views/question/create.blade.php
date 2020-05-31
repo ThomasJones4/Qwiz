@@ -51,7 +51,7 @@
           @endif
         </div>
           <button class="btn btn-primary" type="submit">Add question</button>
-          <button class="btn btn-primary" type="submit">Add media</button>
+          <h3 >Add then edit this question to add media </h3>
         </form>
       </div>
     </div>

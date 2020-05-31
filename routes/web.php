@@ -34,6 +34,11 @@ Route::group(['middleware' => 'auth'], function () {
     'show' => 'quiz.show']);
 
   Route::get('quizzes/{quiz}/questions/create', 'QuestionController@create')->name('quiz.question.create');
+  Route::get('quizzes/{quiz}/questions/create/score-break', 'QuestionController@create_score_break')->name('quiz.question.create.score.break');
+  Route::get('quizzes/{quiz}/start', 'QuizController@start')->name('quiz.start');
+  Route::get('quizzes/{quiz}/finish', 'QuizController@finish')->name('quiz.finish');
+  Route::get('quizzes/{quiz}/marking', 'QuizController@mark')->name('quiz.mark');
+  Route::get('quizzes/{quiz}/marking/complete', 'QuizController@mark_finish')->name('quiz.finish.marking');
   Route::post('quizzes/{quiz}/questions', 'QuestionController@store')->name('quiz.question.store');
   Route::get('questions/{question}/up', 'QuestionController@move_up')->name('question.move.up');
   Route::get('questions/{question}/down', 'QuestionController@move_down')->name('question.move.down');
