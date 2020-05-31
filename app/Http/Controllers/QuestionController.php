@@ -206,7 +206,7 @@ class QuestionController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function master_next(Question $question)
+    public function master_next_del(Question $question)
     {
         Gate::authorize('view_master', $question->quiz);
 
@@ -252,88 +252,111 @@ class QuestionController extends Controller
     public static function next(Question $question, $force = false)
     {
 
-      Gate::authorize('view', $question->quiz);
-      //dd(Auth::user());
       $quiz = $question->quiz;
+      $current_question = $question;
+
+      Gate::authorize('view', $quiz);
 
       // if next question, set variable else set -1
-      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first())
-                                  ? $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first()
-                                  : "-1";
+      $next_question = $quiz->questions->where('order', $current_question->order + 1)->sortBy('order')->first();
 
-      // TODO: replace $next_question->id with the url for the next question
-      if ($next_question == "-1" && $question->released == "1" && $question->title == "mid-scores") {
-        return response()->json(["next" => route('question.lobby', $question), "type" => 'end-scores', 'btn_text' => 'View End of Game Results'], 200);
-      } else if ($next_question == "-1" && $question->released == "1") {
-          // no more questions
-          return response()->json(["next" => "#", "type" => 'finish', 'btn_text' => 'No more questions '], 200);
+      if (null == $next_question) {
+        // no more Questions
+        // return button to view the game overview
 
-      } else if ($next_question->released == "1") {
-        // next question ready
-        if ($question->title == "mid-scores") {
-          return response()->json(["next" => route('question.lobby', $question), "type" => 'mid-scores', 'btn_text' => 'View Score Break Results'], 200);
-        } else if ($question->title == "end-scores") {
-          // end score waiting next
-          return response()->json(["next" => route('question.lobby', $question), "type" => 'end-scores', 'btn_text' => 'View End of Game Results'], 200);
-        } else if ($next_question->title == "mid-scores") {
-          return response()->json(["next" => route('question.show', $next_question), "type" => 'mid-scores', 'btn_text' => 'Submit for Score Break'], 200);
-        } else if ($next_question->title == "end-scores") {
-          // end score waiting next
-          return response()->json(["next" => route('question.show', $next_question), "type" => 'end-scores', 'btn_text' => 'Submit for End of Game'], 200);
-        } else {
-          if ($force) {
-          // next question ready
-          return response()->json(["next" => route('question.show', $question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
-        } else {
-          return response()->json(["next" => route('question.show', $next_question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
+        return response()->json(["next" => route('quiz.overview', $quiz), "type" => 'end_of_quiz', 'btn_text' => 'Go To Game Overview'], 200);
 
-        }
-        }
-      } else {
-        if ($force) {
-        // next question ready
-        return response()->json(["next" => route('question.show', $question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
+      }
+
+      if ($next_question->title == 'scores') {
+        if ($next_question->released) {
+          // if the next question is scores and its been released (QM has marked and released)
+          // then send user stright to the scores waiting area where the results will be displayed
+
+          // TODO: in blade for lobby, if lobby for results so results page
+          return response()->json(["next" => route('question.lobby', $next_question), "type" => 'scores', 'btn_text' => 'View results'], 200);
+
         } else {
-        return response()->json(["next" => null, "type" => 'question', 'btn_text' => 'Waiting for Quiz Master'], 423);
+          // next question is scores but has not been released so
+          // show user button 'qm is marking'
+
+          return response()->json(["next" => null, "type" => 'waiting', 'btn_text' => 'Question Master is marking the quiz'], 423);
 
         }
       }
+
+      if ($next_question->released) {
+        // next question has been released so show link to go to next question
+
+        return response()->json(["next" => route('question.show', $next_question), "type" => 'next_question', 'btn_text' => 'Next Question'], 200);
+
+      } else {
+        // next question has not been released
+
+        return response()->json(["next" => null, "type" => 'waiting', 'btn_text' => 'Waiting for next question to be released'], 423);
+
+      }
+
+      return response()->json(["next" => null, "type" => 'waiting', 'btn_text' => 'default [9d2g5kam]'], 423);
+
     }
+
     /**
-     * get the progress of the quiz
+     * get the next question action link for the backend
      *
      * @param  \App\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public static function master_progress_next(Question $question)
+    public static function master_next(Question $question)
     {
-      Gate::authorize('view_master', $question->quiz);
 
       $quiz = $question->quiz;
 
-      // if next question, set variable else set -1
-      $next_question = (null != $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first())
-                                  ? $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first()
-                                  : "-1";
+      Gate::authorize('view_master', $quiz);
 
+      $next_question = $quiz->questions->where('order', $question->order + 1)->sortBy('order')->first();
+      $latest_question = $quiz->questions->where('released')->sortBy('order')->last();
+      $latest_next_question = $quiz->questions->where('released', "0")->sortBy('order')->first();
+      $current_question = $question;
 
-      // TODO: replace $next_question->id with the url for the next question
-      if ($next_question == "-1" && $question->released == "1") {
-          // no more questions
-          //return response()->json(["next" => null, "type" => null], 200);
-          return response()->json(["next" => route('quiz.finish', $quiz), "type" => 'finish', 'btn_text' => 'Finish quiz'], 200);
+      if (null == $next_question && $current_question->released) {
+        // no more Questions
+        // return button to view the game overview
 
-      } else if ($question->released == "1" && $question->title == 'mid-scores') {
-        return response()->json(["next" => route('quiz.mark', $question->quiz), "type" => 'question', 'btn_text' => 'Mark answers so far'], 200);
-      } else if ($question->released == "1") {
-        return response()->json(["next" => route('question.master', $next_question), "type" => 'question', 'btn_text' => 'Next Question'], 200);
-      } else if ($question->released == "0" && $quiz->questions->sortBy('order')->where('released', "1")->count() == $question->order) {
-        return response()->json(["next" => route('question.master.this', $question), "type" => 'question', 'btn_text' => 'Release This Question'], 200);
-      } else {
-        $next_to_be_released = $quiz->questions->sortBy('order')->where('released', "0")->first();
-        return response()->json(["next" => route('question.master', $next_to_be_released), "type" => 'question', 'btn_text' => 'Go to first unreleased question'], 200);
+        return response()->json(["next" => route('quiz.overview', $quiz), "type" => 'end_of_quiz', 'btn_text' => 'Go To Game Overview'], 200);
+
       }
+
+      if ($current_question->title == 'scores') {
+          // next question is scores but has not been released so
+          // show master the 'mark answers' button
+
+          return response()->json(["next" => route('quiz.mark', $quiz), "type" => 'mark', 'btn_text' => 'Mark answers'], 200);
+
+        }
+
+
+      if ($current_question->released && $current_question->order < $latest_question->order) {
+        // this question has been released and isnt the latest -> link to latest question
+
+        return response()->json(["next" => route('question.master', $latest_question), "type" => 'latest_question', 'btn_text' => 'Go to latest Question'], 200);
+
+      }
+
+      if (!$current_question->released && $current_question->order == $latest_next_question->order) {
+        // this question has not been released and is the latest -> link to release
+
+        return response()->json(["next" => route('question.master.this', $current_question), "type" => 'release', 'btn_text' => 'Release this question'], 200);
+
+      }
+
+      return response()->json(["next" => route('question.master', $next_question), "type" => 'next_question', 'btn_text' => 'Next question [9d2g5kam]'], 200);
+
+
     }
+
+
+
 
 
     /**

@@ -209,9 +209,28 @@ class QuizController extends Controller
       $first_unreleased = $quiz->questions->where('released', "0")->sortBy('order')->first();
       $first_unreleased->released = "1";
       $first_unreleased->save();
+      $first_unreleased = $quiz->questions->where('released', "0")->sortBy('order')->first();
+
+      if (null == $first_unreleased) {
+        return redirect()->route('quiz.overview', $quiz);
+      }
+
 
       return redirect()->route('question.master', $first_unreleased);
 
+    }
+    /**
+     * complete marking screen for first unreleased score question
+     *
+     * @param  \App\Question  $question
+     * @return \Illuminate\Http\Response
+     */
+    public function overview(Quiz $quiz)
+    {
+
+      Gate::authorize('view', $quiz);
+
+      dd('overview');
     }
 
 

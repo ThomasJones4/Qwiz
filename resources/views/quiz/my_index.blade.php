@@ -58,7 +58,7 @@
                                     </a>
                                 </td>
                                   <td>
-                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="{{ route('quiz.start', $quiz) }}" role="button">
                                       <i class="fas fa-play-circle"></i>
                                     </a>
                                 </td>

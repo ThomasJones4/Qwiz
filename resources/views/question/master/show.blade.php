@@ -94,7 +94,7 @@
 
     function fetchdata_next(){
      $.ajax({
-      url: '{{ route('master_progress_next', [$question]) }}?api_token={{auth()->user()->api_token}}',
+      url: '{{ route('master_next', [$question]) }}?api_token={{auth()->user()->api_token}}',
       type: 'get',
       success: function(data){
       // quiz ready, update page
