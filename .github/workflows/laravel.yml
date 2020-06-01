@@ -8,88 +8,27 @@ jobs:
     runs-on: ubuntu-latest
     container: docker://zaherg/laravel-dusk:latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 1
       - name: Prepare the environment
-        run: cp .env.example .env
+        run: cp .env.dusk.local .env
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
       - name: Install Composer dependencies
         run: php artisan key:generate
       - name: Upgrade chrome driver
         run: php artisan dusk:chrome-driver
+      - name: Create Database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
       - name: Start Chrome Driver
         run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
       - name: Run Laravel Server
-        run: php artisan serve > /dev/null 2>&1 &
-      - name: Run dusk tests
-        run: php artisan dusk
-
-
-  dusk-php-73:
-    runs-on: ubuntu-latest
-    container: docker://zaherg/laravel-dusk:7.3
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: Prepare the environment
-        run: cp .env.example .env
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
-      - name: Install Composer dependencies
-        run: php artisan key:generate
-      - name: Upgrade chrome driver
-        run: php artisan dusk:chrome-driver
-      - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
-      - name: Run Laravel Server
-        run: php artisan serve > /dev/null 2>&1 &
-      - name: Run dusk tests
-        run: php artisan dusk
-
-  dusk-php-72:
-    runs-on: ubuntu-latest
-    container: docker://zaherg/laravel-dusk:7.2
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: Prepare the environment
-        run: cp .env.example .env
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
-      - name: Install Composer dependencies
-        run: php artisan key:generate
-      - name: Upgrade chrome driver
-        run: php artisan dusk:chrome-driver
-      - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
-      - name: Run Laravel Server
-        run: php artisan serve > /dev/null 2>&1 &
-      - name: Run dusk tests
-        run: php artisan dusk
-
-  dusk-host:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      - name: PHP version
-        run: php -v
-      - name: Prepare the environment
-        run: cp .env.example .env
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
-      - name: Install Composer dependencies
-        run: php artisan key:generate
-      - name: Upgrade chrome driver
-        run: php artisan dusk:chrome-driver
-      - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
-      - name: Run Laravel Server
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
         run: php artisan serve > /dev/null 2>&1 &
       - name: Run dusk tests
         run: php artisan dusk
