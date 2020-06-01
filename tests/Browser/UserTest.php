@@ -7,6 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use App\User;
 use App\Quiz;
+use Illuminate\Support\Facades\DB;
 
 class UserTest extends DuskTestCase
 {
