@@ -157,6 +157,8 @@ class QuizController extends Controller
 
       $first_question->released = "1";
       $first_question->save();
+      $quiz->invite_code = null;
+      $quiz->save();
 
       return redirect()->route('question.master', $first_question);
     }

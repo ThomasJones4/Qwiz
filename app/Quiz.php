@@ -35,7 +35,15 @@ class Quiz extends Model
     }
 
     public function is_live() {
-      return (null != $this->invite_code);
+      return (null == $this->invite_code && !$this->is_finish());
+    }
+
+    public function is_finish() {
+      return ($this->questions()->where('released', "0")->get()->count() == 0);
+    }
+
+    public function latest_unreleased() {
+       return $this->questions()->get()->where('released', "0")->sortBy('order')->first();
     }
 
 }

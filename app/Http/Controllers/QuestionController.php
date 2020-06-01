@@ -118,7 +118,7 @@ class QuestionController extends Controller
       Gate::authorize('view_master', $quiz);
 
       $scores = [];
-      $scores['title'] = 'mid-scores';
+      $scores['title'] = 'scores';
       $scores['question'] = '-';
       $scores['correct_answer'] = '-';
 
@@ -145,9 +145,7 @@ class QuestionController extends Controller
 
       $all_questions = $question->quiz->questions->sortBy('order');
 
-      $foyer = ['mid-scores','end-scores'];
-
-      if (in_array($question->title, $foyer)) {
+      if ($question->title == "scores") {
         $quiz = $question->quiz;
         return view('quiz.scoreboard.show_foyer', compact('quiz', 'question', 'all_questions'));
       } else {
@@ -187,9 +185,9 @@ class QuestionController extends Controller
 
         $answers = Auth::user()->responses()->where('question_id', $question->id)->get();
 
-        $results = ['mid-scores','end-scores'];
 
-        if (in_array($question->title, $results)) {
+        // QUESTION: 0001;
+        if ($question->title == 'scores') {
           $quiz = $question->quiz;
 
           $all_questions = $question->quiz->questions->where('order', '<', $question->order)->sortBy('order');
@@ -336,7 +334,8 @@ class QuestionController extends Controller
         }
 
 
-      if ($current_question->released && $current_question->order < $latest_question->order) {
+      if (($current_question->released && $current_question->order < $latest_question->order)
+        || (!$current_question->released && $current_question->order > $latest_question->order + 1)) {
         // this question has been released and isnt the latest -> link to latest question
 
         return response()->json(["next" => route('question.master', $latest_question), "type" => 'latest_question', 'btn_text' => 'Go to latest Question'], 200);
@@ -349,6 +348,8 @@ class QuestionController extends Controller
         return response()->json(["next" => route('question.master.this', $current_question), "type" => 'release', 'btn_text' => 'Release this question'], 200);
 
       }
+
+
 
       return response()->json(["next" => route('question.master', $next_question), "type" => 'next_question', 'btn_text' => 'Next question [9d2g5kam]'], 200);
 

@@ -6,6 +6,7 @@ use App\Response;
 use App\Question;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class ResponseController extends Controller
@@ -31,26 +32,21 @@ class ResponseController extends Controller
     }
 
     /**
-     * mark the response correct
+     * toggle if correct
      *
      * @param  \App\Response  $response
      * @return \Illuminate\Http\Response
      */
-    public function mark_correct(Response $response)
+    public function mark_toggle(Response $response)
     {
-        //
+      Gate::authorize('view_master', $response->question->quiz);
+
+      $response->correct = !$response->correct;
+      $response->save();
+
+      return response()->json(["response" => $response->id, "correct" => $response->correct], 200);
     }
 
-    /**
-     * mark the response correct
-     *
-     * @param  \App\Response  $response
-     * @return \Illuminate\Http\Response
-     */
-    public function mark_incorrect(Response $response)
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

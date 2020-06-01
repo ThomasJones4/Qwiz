@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('quizzes/{quiz}/questions/create/score-break', 'QuestionController@create_score_break')->name('quiz.question.create.score.break');
   Route::get('quizzes/{quiz}/start', 'QuizController@start')->name('quiz.start');
   Route::get('quizzes/{quiz}/finish', 'QuizController@finish')->name('quiz.finish');
-  Route::get('quizzes/{quiz}/finish', 'QuizController@overview')->name('quiz.overview');
+  Route::get('quizzes/{quiz}/overview', 'QuizController@overview')->name('quiz.overview');
   Route::get('quizzes/{quiz}/marking', 'QuizController@mark')->name('quiz.mark');
   Route::get('quizzes/{quiz}/marking/complete', 'QuizController@mark_finish')->name('quiz.finish.marking');
   Route::post('quizzes/{quiz}/questions', 'QuestionController@store')->name('quiz.question.store');
@@ -47,7 +47,6 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('questions/{question}/media/create', 'MediaController@create')->name('media.create');
   Route::post('questions/{question}/media', 'MediaController@store')->name('media.store');
   Route::get('questions/{question}/media/{media}/destroy', 'MediaController@destroy')->name('media.delete');
-
 
   Route::resource('questions', 'QuestionController', ['only' => ['show', 'edit', 'update']])->names([
     'show' => 'question.show',

@@ -17,6 +17,8 @@
                     </div>
                 </div>
             </div>
+            <button id="goFS">Go fullscreen</button>
+
 
 
     <div class="text-center mt--7">
@@ -58,5 +60,13 @@
      fetchdata();
      interval = setInterval(fetchdata,2000);
     });
+
+
+
+  var goFS = document.getElementById("goFS");
+  goFS.addEventListener("click", function() {
+      document.body.requestFullscreen();
+  }, false);
+
     </script>
 @endpush

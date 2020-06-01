@@ -17,7 +17,15 @@
                               <div class="col-9 text-right">
                                 <a href="{{ route('quiz.question.create', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add new Question') }}</a>
                                 <a href="{{ route('quiz.question.create.score.break', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add result screen') }}</a>
-                                @if ($quiz->questions->count() > 0)
+                                @if ($quiz->questions->where('title', '!=', 'scores')->count() <= 0)
+                                  <button type="button" class="btn btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! It looks like you've forgot to add any questions.">
+                                     {{__('Start Quiz 🎉')}}
+                                  </button>
+                                @elseif($quiz->questions->sortBy('order')->last()->title != "scores")
+                                  <button type="button" class="btn btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! The last question needs to be a results screen.">
+                                     {{__('Start Quiz 🎉')}}
+                                  </button>
+                                @else
                                   <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-notification" >{{ __('Start Quiz 🎉') }}</a>
                                 @endif
                               </div>
@@ -81,33 +89,39 @@
                                 @foreach ($quiz->questions->sortBy('order') as $question)
                                     <tr>
                                       <td>{{ $question->order + 1 }}</td>
-                                      <td>@if ($question->title == "mid-scores") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
-                                      <td>@if ($question->title == "mid-scores") @else {{ $question->question }} @endif</td>
+                                      <td>@if ($question->title == "scores") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
+                                      <td>@if ($question->title == "scores") @else {{ $question->question }} @endif</td>
 
-                                      <td>
-                                        <a class="btn btn-sm btn-icon-only text-light" href="{{ route('questions.edit', $question) }}" role="button">
+                                      <td>@if ($question->title == "scores")
+                                        @elseif ($question->released)
+                                        <button type="button" class="btn btn-sm btn-icon-only" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! It looks like you've forgot to add any questions.">
+                                           <i class="fas fa-edit"></i>
+                                        </button>
+                                        @else
+                                        <a class="btn btn-sm btn-icon-only" href="{{ route('questions.edit', $question) }}" role="button">
                                           <i class="fas fa-edit"></i>
                                         </a>
+                                        @endif
                                     </td>
 
                                     <td class="text-right">
                                       <div class="dropdown">
                                           <div class="container">
                                             <div class="row">
-                                          <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <a class="btn btn-sm btn-icon-only" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-sort"></i>
                                           </a>
                                           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                           @can('move_up', $question)
                                             <div class="col-6">
-                                            <a class="btn btn-sm btn-icon-only text-light" href="{{ route('question.move.up', $question) }}" role="button">
+                                            <a class="btn btn-sm btn-icon-only" href="{{ route('question.move.up', $question) }}" role="button">
                                               <i class="fas fa-sort-up"></i>
                                             </a>
                                           </div>
                                           @endcan
                                           @can('move_down', $question)
                                           <div class="col-6">
-                                            <a class="btn btn-sm btn-icon-only text-light" href="{{ route('question.move.down', $question) }}" role="button">
+                                            <a class="btn btn-sm btn-icon-only" href="{{ route('question.move.down', $question) }}" role="button">
                                               <i class="fas fa-sort-down"></i>
                                             </a>
                                           </div>

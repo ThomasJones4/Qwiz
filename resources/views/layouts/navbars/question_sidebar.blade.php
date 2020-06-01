@@ -15,20 +15,12 @@
             <ul class="navbar-nav">
               @foreach ($all_questions as $sidebar_question)
                 <li class="nav-item">
-                          @if ($sidebar_question->title == "mid-scores")
+                          @if ($sidebar_question->title == "scores")
                             <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
                               <i>{{ $sidebar_question->order + 1 }}</i>
                               <i class="fas fa-star text-warning"></i>
                               @if ($sidebar_question->id == $question->id) <b> @endif
                                 Mid Scores
-                              @if ($sidebar_question->id == $question->id) </b> @endif
-                            </a>
-                          @elseif ($sidebar_question->title == "end-scores")
-                            <a class="nav-link" @if ($master) href="{{ route('question.master', $sidebar_question) }}" @else href="{{ route('question.show', $sidebar_question) }}" @endif>
-                              <i>{{ $sidebar_question->order + 1 }}</i>
-                              <i class="fas fa-stars text-warning"></i>
-                              @if ($sidebar_question->id == $question->id) <b> @endif
-                                Final Scores
                               @if ($sidebar_question->id == $question->id) </b> @endif
                             </a>
                           @elseif ((null != $question->latest() || $question->latest() > -1) && ($sidebar_question->order == $question->latest()) == "1")

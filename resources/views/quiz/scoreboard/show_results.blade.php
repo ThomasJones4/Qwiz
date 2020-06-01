@@ -17,7 +17,7 @@
                 <div class="card-header border-0">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 class="mb-0">@if ($question->title == 'end-scores') End Scores @else Mid Scores @endif</h3>
+                            <h3 class="mb-0">Scores</h3>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                             <tr>
                                 <th scope="col">{{ __('Question') }}</th>
                                 @foreach ($question->quiz->users as $participant)
-                                <th scope="col">{{ $participant->name }}</th>
+                                  <th scope="col">{{ $participant->name }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -53,7 +53,7 @@
                                     <td scope="col">
                                       @foreach ($participant->question_responses($loop_question) as $response)
                                         @if ($response->correct == "1")
-                                          <b>{{$response->answer}}</b>
+                                          <b class="text-success">{{$response->answer}}</b>
                                         @else
                                           <strike>{{$response->answer}}</strike>
                                         @endif

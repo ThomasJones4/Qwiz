@@ -41,7 +41,7 @@
                         </thead>
                         <tbody>
                             @foreach ($all_questions as $question)
-                            @if ($question->title != "mid-scores")
+                            @if ($question->title != "scores")
                                 <tr>
                                   <td>{{ $question->question }}</td>
 
@@ -50,16 +50,19 @@
                                     @if ($question->have_i_answered($question))
                                     <td scope="col">
                                       @foreach ($participant->question_responses($question)->sortByDesc('id') as $response)
-                                      @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest: @endif
+                                      @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest:
                                         @if ($response->correct == "1")
-                                          {{$response->answer}} <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-times"></i>
+                                          <span id="response-{{$response->id}}" class="text-success">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button" >
+                                            <i id="response-toggle-{{$response->id}}" class="fas fa-times"></i>
                                           </a>
                                         @else
-                                        <strike>{{$response->answer}}<strike> <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <i class="fas fa-check"></i>
+                                        <span id="response-{{$response->id}}" class="text-danger">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button">
+                                          <i  id="response-toggle-{{$response->id}}" class="fas fa-check"></i>
                                         </a>
                                         @endif
+                                      @else
+                                        <strike>{{$response->answer}}<strike>
+                                      @endif
                                       </br>
                                       @endforeach
                                     </td>
@@ -94,35 +97,26 @@
 @push('js')
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
-    <!-- <script>
-    function fetchdata(){
-     $.ajax({
-      url: '{{ route('next_question_results', [($question->id + 1)]) }}?api_token={{auth()->user()->api_token}}',
-      type: 'get',
-      success: function(data){
-      // quiz ready, update page
-       clearInterval(interval);
+    <script>
+      $('.response-toggle').click(function(){
 
-       $('#next_question_btn').attr('href', data.next);
-       $('#next_question_btn_text').text(data.btn_text);
-       $('#next_question_btn_icon').removeClass().addClass('fa fa-play');
-     },
+          var response_id = $(this).attr('id');
 
-      error: function(data){
-      // quiz ready, update page
-       clearInterval(interval);
+          $.ajax({
+           url: '../../api/responses/'+response_id+'/toggle?api_token={{auth()->user()->api_token}}',
+           type: 'get',
+           success: function(data){
+           // quiz ready, update page
+            if ($('#response-toggle-'+response_id).hasClass('fa-times')) {
+              $('#response-toggle-'+response_id).removeClass('fa-times').addClass('fa-check');
+              $('#response-'+response_id).removeClass('text-success').addClass('text-danger');
+            } else {
+              $('#response-toggle-'+response_id).removeClass('fa-check').addClass('fa-times');
+              $('#response-'+response_id).removeClass('text-danger').addClass('text-success');
+            }
 
-       $('#next_question_btn').attr('href', '#');
-       $('#next_question_btn_text').text('End of quiz');
-       $('#next_question_btn_icon').removeClass();
-     }
-
-     });
-    }
-
-    $(document).ready(function(){
-     fetchdata();
-     interval = setInterval(fetchdata,2000);
-    });
-    </script> -->
+          }
+          });
+      });
+    </script>
 @endpush
