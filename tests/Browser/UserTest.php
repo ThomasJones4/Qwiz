@@ -18,6 +18,7 @@ class UserTest extends DuskTestCase
     public function testUserCanLogin()
     {
 
+      print_r( DB::select('SHOW DATABASES'));
       echo env('DB_HOST');
       echo env('DB_DATABASE');
       echo env('DB_USERNAME');
