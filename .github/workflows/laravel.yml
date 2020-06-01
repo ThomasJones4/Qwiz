@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare The Environment
-        run: cp .env.testing .env
+        run: cp .env.example .env
       - name: Create Database
         run: |
           sudo systemctl start mysql
