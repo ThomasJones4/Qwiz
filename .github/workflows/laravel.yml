@@ -4,6 +4,16 @@ jobs:
 
   dusk-php:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: my-database
+        ports:
+          - 3307:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - uses: actions/checkout@v2
       - name: Prepare The Environment
@@ -13,7 +23,6 @@ jobs:
           sudo systemctl start mysql
           sudo systemctl start mysql.service
           mysql --user="root" --password="root" -e "DELIMITER $$ CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;$$ DELIMITER ;"
-          echo "##[set-output name=databses;]$(mysql --user="root" --password="root" -e "DELIMITER $$ SHOW DATABASES;$$ DELIMITER ;")"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
       - name: Generate Application Key
