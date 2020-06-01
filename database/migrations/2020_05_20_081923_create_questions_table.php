@@ -20,7 +20,7 @@ class CreateQuestionsTable extends Migration
             $table->string('title');
             $table->string('question');
             $table->boolean('released')->default('0');
-            $table->boolean('order');
+            $table->integer('order');
             $table->string('correct_answer')->nullable();
             $table->timestamps();
         });
