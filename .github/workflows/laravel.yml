@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare The Environment
-        run: cp .env.example .env
+        run: cp .env.testing .env
       - name: Create Database
         run: |
           sudo systemctl start mysql
@@ -25,5 +25,4 @@ jobs:
       - name: Run Dusk Tests
         env:
           APP_URL: "http://127.0.0.1:8000"
-          DB_PASSWORD: "root"
         run: php artisan dusk
