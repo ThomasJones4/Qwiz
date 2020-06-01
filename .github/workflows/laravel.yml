@@ -11,7 +11,7 @@ jobs:
       - name: Create Database
         run: |
           sudo systemctl start mysql
-          mysql --user="root" --password="" -e "DELIMITER $$ CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;$$ DELIMITER ;"
+          mysql --user="root" --password="root" -e "DELIMITER $$ CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;$$ DELIMITER ;"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
       - name: Generate Application Key
@@ -25,4 +25,5 @@ jobs:
       - name: Run Dusk Tests
         env:
           APP_URL: "http://127.0.0.1:8000"
+          DB_PASSWORD: "root"
         run: php artisan dusk
