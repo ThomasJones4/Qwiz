@@ -10,6 +10,12 @@ jobs:
         run: |
           cp .env.dusk.ci .env
           touch database/database.sqlite
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '7.3'
+          extension-csv: mbstring, dom, zip, curl # (optional) specify the extensions you want to enable/install.
+
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
       - name: Generate Application Key
