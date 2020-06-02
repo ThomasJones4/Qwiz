@@ -57,21 +57,16 @@ jobs:
           php artisan key:generate
           php artisan migrate
           php artisan optimize
-          echo "127.0.0.1    som.test" >> /etc/hosts
-          cat /etc/hosts
-      - name: Start xvfb
-        run: |
-          /usr/bin/Xvfb :0 -screen 0 1280x720x24 > /dev/null 2>&1 &
       - name: Upgrade Chrome Driver
         run: |
           php artisan dusk:update
           php artisan dusk:chrome-driver 72
 
       - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux
 
       - name: Run Laravel Server
-        run: php artisan serve --host=som.test --port=8000 > /dev/null 2>&1 &
+        run: php artisan serve --host=som.test --port=8000
 
       - name: Run Dusk Tests
         run: php artisan dusk
