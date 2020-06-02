@@ -101,7 +101,7 @@ class UserTest extends DuskTestCase
     }
 
     /**
-     * Test a new user can create a new quiz
+     * Test a new user can join a new quiz
      *
      * @return void
      */
@@ -143,6 +143,117 @@ class UserTest extends DuskTestCase
                 ->assertPathIs(route('quiz.show', Quiz::find($quiz_id), false))
                 ->assertSee('Waiting for quiz master')
                 ;
+
         });
+    }
+
+    /**
+     * Test a quiz master can add a score break
+     *
+     * @return void
+     */
+    public function testUserCanAddScoreBreak()
+    {
+      $user = factory(User::class)->create();
+
+      $this->browse(function (Browser $browser) use ($user) {
+          $browser->visit('/quizzes/mine')
+                ->assertSee('Create New Quiz')
+                ->clickLink('Create New Quiz')
+                ->assertPathIs('/quizzes/create')
+                ->assertSee('Create a new quiz')
+                ->type('name', 'The big new quiz')
+                ->type('scheduled_start', '2019-04-30')
+                ->press('Create Quiz')
+                ->assertSee('The big new quiz Questions')
+                ->assertSee('Add new Question')
+                ->clickLink('Add new Question')
+                ->type('title', 'Cat #1')
+                ->type('question', 'But is it really?')
+                ->press('Add question')
+                ->assertSee('CATEGORY')
+                ->assertSee('Cat #1')
+                ->assertSee('But is it really?')
+                ->assertSee('Add result screen')
+                ->clickLink('Add result screen')
+                ->assertSee('Scores')
+                ;
+      });
+    }
+
+    /**
+     * Test a quiz master can not start quiz without at least 1 question and 1 score screen as the
+     *
+     * @return void
+     */
+    public function testUserCanNotStartNotReadyQuiz()
+    {
+      $user = factory(User::class)->create();
+
+      $this->browse(function (Browser $browser) use ($user) {
+          $browser->visit('/quizzes/mine')
+                ->assertSee('Create New Quiz')
+                ->clickLink('Create New Quiz')
+                ->assertPathIs('/quizzes/create')
+                ->assertSee('Create a new quiz')
+                ->type('name', 'The big new quiz')
+                ->type('scheduled_start', '2019-04-30')
+                ->press('Create Quiz')
+                ->assertSee('The big new quiz Questions')
+                ->click('@start-button')
+                ->assertSee('Whoops! It looks like you\'ve forgot to add any questions.')
+                ->assertSee('Add new Question')
+                ->clickLink('Add new Question')
+                ->type('title', 'Cat #1')
+                ->type('question', 'But is it really?')
+                ->press('Add question')
+                ->assertSee('Cat #1')
+                ->click('@start-button')
+                ->assertSee('Whoops! The last question needs to be a results screen.')
+                ->assertSee('Add result screen')
+                ->clickLink('Add result screen')
+                ->assertSee('Scores')
+                ->click('@start-button')
+                ->assertSee('Yes, everyones here. Let\'s Go!')
+                ;
+      });
+    }
+
+    /**
+     * Test a quiz master can not edit a question once it has been released
+     *
+     * @return void
+     */
+    public function testUserCanStartQuiz()
+    {
+      $user = factory(User::class)->create();
+
+      $this->browse(function (Browser $browser) use ($user) {
+          $browser->visit('/quizzes/mine')
+                ->assertSee('Create New Quiz')
+                ->clickLink('Create New Quiz')
+                ->assertPathIs('/quizzes/create')
+                ->assertSee('Create a new quiz')
+                ->type('name', 'The big new quiz')
+                ->type('scheduled_start', '2019-04-30')
+                ->press('Create Quiz')
+                ->assertSee('The big new quiz Questions')
+                ->assertSee('Add new Question')
+                ->clickLink('Add new Question')
+                ->type('title', 'Cat #1')
+                ->type('question', 'But is it really?')
+                ->press('Add question')
+                ->assertSee('Cat #1')
+                ->assertSee('Add result screen')
+                ->clickLink('Add result screen')
+                ->assertSee('Scores')
+                ->click('@start-button')
+                ->assertSee('Yes, everyones here. Let\'s Go!')
+                ->click('@modal-start-button')
+                ->assertSee('Cat #1')
+                ->assertSee('But is it really?')
+                ->assertSee('Scores')
+                ;
+      });
     }
 }

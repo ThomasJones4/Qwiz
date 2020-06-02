@@ -94,6 +94,21 @@ class QuestionPolicy
     }
 
     /**
+     * Determine whether the question can be edited
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function is_editable(User $user, Question $question)
+    {
+      Gate::authorize('view_master', $question->quiz);
+
+      return ($question->title != "%%scores%%" && $question->question == "-")
+        ? Response::allow()
+        : Response::deny("Didn't think we'd every see you here. (004_edit)");
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user

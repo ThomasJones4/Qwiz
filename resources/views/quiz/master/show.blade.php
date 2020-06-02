@@ -17,16 +17,16 @@
                               <div class="col-9 text-right">
                                 <a href="{{ route('quiz.question.create', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add new Question') }}</a>
                                 <a href="{{ route('quiz.question.create.score.break', $quiz) }}" class="btn btn-sm btn-primary">{{ __('Add result screen') }}</a>
-                                @if ($quiz->questions->where('title', '!=', 'scores')->count() <= 0)
-                                  <button type="button" class="btn btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! It looks like you've forgot to add any questions.">
+                                @if ($quiz->questions->where('title', '!=', '%%scores%%')->count() <= 0)
+                                  <button type="button" class="btn btn-sm btn-primary" dusk="start-button" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! It looks like you've forgot to add any questions.">
                                      {{__('Start Quiz 🎉')}}
                                   </button>
-                                @elseif($quiz->questions->sortBy('order')->last()->title != "scores")
-                                  <button type="button" class="btn btn-sm btn-primary" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! The last question needs to be a results screen.">
+                                @elseif($quiz->questions->sortBy('order')->last()->title != "%%scores%%")
+                                  <button type="button" class="btn btn-sm btn-primary" dusk="start-button" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! The last question needs to be a results screen.">
                                      {{__('Start Quiz 🎉')}}
                                   </button>
                                 @else
-                                  <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-notification" >{{ __('Start Quiz 🎉') }}</a>
+                                  <a href="#" class="btn btn-sm btn-primary" dusk="start-button" data-toggle="modal" data-target="#modal-notification" >{{ __('Start Quiz 🎉') }}</a>
                                 @endif
                               </div>
                                 <!-- <button type="button" class="btn btn-block btn-warning mb-3" >Notification</button> -->
@@ -52,7 +52,7 @@
                                       </div>
 
                                       <div class="modal-footer">
-                                          <a href="{{ route('quiz.start', $quiz) }}" class="btn btn-white" >Yes, everyones here. Let's Go!</a>
+                                          <a href="{{ route('quiz.start', $quiz) }}" dusk="modal-start-button" class="btn btn-white" >Yes, everyones here. Let's Go!</a>
                                           <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Wait</button>
                                       </div>
 
@@ -89,12 +89,12 @@
                                 @foreach ($quiz->questions->sortBy('order') as $question)
                                     <tr>
                                       <td>{{ $question->order + 1 }}</td>
-                                      <td>@if ($question->title == "scores") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
-                                      <td>@if ($question->title == "scores") @else {{ $question->question }} @endif</td>
+                                      <td>@if ($question->title == "%%scores%%") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
+                                      <td>@if ($question->title == "%%scores%%") @else {{ $question->question }} @endif</td>
 
-                                      <td>@if ($question->title == "scores")
+                                      <td>@if ($question->title == "%%scores%%")
                                         @elseif ($question->released)
-                                        <button type="button" class="btn btn-sm btn-icon-only" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! It looks like you've forgot to add any questions.">
+                                        <button type="button" class="btn btn-sm btn-icon-only text-light" dusk="disabled-edit" data-container="body" data-toggle="popover" data-placement="top" data-content="Whoops! This question has already been relesed">
                                            <i class="fas fa-edit"></i>
                                         </button>
                                         @else

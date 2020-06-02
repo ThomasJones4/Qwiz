@@ -118,7 +118,7 @@ class QuestionController extends Controller
       Gate::authorize('view_master', $quiz);
 
       $scores = [];
-      $scores['title'] = 'scores';
+      $scores['title'] = '%%scores%%';
       $scores['question'] = '-';
       $scores['correct_answer'] = '-';
 
@@ -145,7 +145,7 @@ class QuestionController extends Controller
 
       $all_questions = $question->quiz->questions->sortBy('order');
 
-      if ($question->title == "scores") {
+      if ($question->title == "%%scores%%") {
         $quiz = $question->quiz;
         return view('quiz.scoreboard.show_foyer', compact('quiz', 'question', 'all_questions'));
       } else {
@@ -187,7 +187,7 @@ class QuestionController extends Controller
 
 
         // QUESTION: 0001;
-        if ($question->title == 'scores') {
+        if ($question->title == '%%scores%%') {
           $quiz = $question->quiz;
 
           $all_questions = $question->quiz->questions->where('order', '<', $question->order)->sortBy('order');
@@ -266,7 +266,7 @@ class QuestionController extends Controller
 
       }
 
-      if ($next_question->title == 'scores') {
+      if ($next_question->title == '%%scores%%') {
         if ($next_question->released) {
           // if the next question is scores and its been released (QM has marked and released)
           // then send user stright to the scores waiting area where the results will be displayed
@@ -325,7 +325,7 @@ class QuestionController extends Controller
 
       }
 
-      if ($current_question->title == 'scores') {
+      if ($current_question->title == '%%scores%%') {
           // next question is scores but has not been released so
           // show master the 'mark answers' button
 
@@ -397,7 +397,7 @@ class QuestionController extends Controller
      */
     public function edit(Question $question)
     {
-        Gate::authorize('view_master', $question);
+        Gate::authorize('is_editable', $question);
 
         return view('question.edit', compact('question'));
     }

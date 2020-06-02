@@ -18,7 +18,7 @@ class CreateQuizzesTable extends Migration
             $table->unsignedBigInteger('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users');
             $table->datetime('scheduled_start')->nullable();
-            $table->string('invite_code');
+            $table->string('invite_code')->nullable();
             $table->string('name');
             $table->timestamps();
         });
