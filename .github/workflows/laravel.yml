@@ -56,7 +56,6 @@ jobs:
           cp .env.dusk.ci .env
           php artisan key:generate
           php artisan migrate
-          php artisan optimize
       - name: Upgrade Chrome Driver
         run: |
           php artisan dusk:update
@@ -66,7 +65,7 @@ jobs:
         run: ./vendor/laravel/dusk/bin/chromedriver-linux
 
       - name: Run Laravel Server
-        run: php artisan serve --host=som.test --port=8000
+        run: php artisan serve
 
       - name: Run Dusk Tests
         run: php artisan dusk
