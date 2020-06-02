@@ -47,12 +47,6 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
 
-      - name: Install yarn dependencies and compile
-        working-directory: frontend
-        run: |
-          cp .env.example .env
-          yarn install --frozen-lockfile --ignore-engines
-          yarn build
       - name: Create DB and schemas
         working-directory: database
         run: |
