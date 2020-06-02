@@ -18,7 +18,7 @@ class UserTest extends DuskTestCase
      */
     public function testUserCanLogin()
     {
-
+      dd(env('DB_CONNECTION'));
         $user = factory(User::class)->create();
 
         $this->browse(function (Browser $browser) use ($user) {
