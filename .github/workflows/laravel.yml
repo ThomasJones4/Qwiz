@@ -1,39 +1,95 @@
-name: CI
-on: [push]
+on: push
+name: LARAVEL DUSK
 jobs:
-
-  dusk-php:
+  dusk:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: my-database
-        ports:
-          - 3307:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.3.0
+      options: --shm-size=2048M --cpus 2
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Prepare The Environment
-        run: cp .env.example .env
-      - name: Create Database
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install chrome
         run: |
-          sudo systemctl start mysql
-          sudo systemctl start mysql.service
-          mysql --user="root" --password="root" -e "DELIMITER $$ CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;$$ DELIMITER ;"
-      - name: Install Composer Dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
-      - name: Generate Application Key
-        run: php artisan key:generate
+          apt-get update
+          apt-get install -y libnss3 chromium-browser --fix-missing
+          apt-get -y install libxpm4 libxrender1 libgtk2.0-0 \
+          libnss3 libgconf-2-4 chromium-browser \
+          xvfb gtk2-engines-pixbuf xfonts-cyrillic \
+          xfonts-100dpi xfonts-75dpi xfonts-base \
+          xfonts-scalable imagemagick x11-apps
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts --ignore-platform-reqs
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install yarn dependencies and compile
+        working-directory: frontend
+        run: |
+          cp .env.example .env
+          yarn install --frozen-lockfile --ignore-engines
+          yarn build
+      - name: Create DB and schemas
+        working-directory: database
+        run: |
+          touch database.sqlite
+      - name: Copy .env
+        run: |
+          cp .env.dusk.ci .env
+          php artisan key:generate
+          php artisan migrate
+          php artisan optimize
+          echo "127.0.0.1    som.test" >> /etc/hosts
+          cat /etc/hosts
+      - name: Start xvfb
+        run: |
+          /usr/bin/Xvfb :0 -screen 0 1280x720x24 > /dev/null 2>&1 &
       - name: Upgrade Chrome Driver
-        run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
+        run: |
+          php artisan dusk:update
+          php artisan dusk:chrome-driver 72
+
       - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux &
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+
       - name: Run Laravel Server
-        run: php artisan serve &
+        run: php artisan serve --host=som.test --port=8000 > /dev/null 2>&1 &
+
       - name: Run Dusk Tests
-        env:
-          APP_URL: "http://127.0.0.1:8000"
         run: php artisan dusk
+
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: screenshots
+          path: tests/Browser/screenshots
+
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: logs
+          path: storage/logs
