@@ -145,7 +145,7 @@ class QuestionController extends Controller
           if (($random_question['type'] == "multiple")) {
             $answers = array_merge(['correct'=>$random_question['correct_answer']],$random_question['incorrect_answers']);
             shuffle($answers);
-            $answers = implode(array_values($answers), ", ");
+            $answers = implode(", ", array_values($answers));
             $new_question['possible_answers'] = $answers;
           }
           $content =  (($random_question['type'] == "boolean")? "True or False? ":"") . $random_question['question'];
@@ -484,6 +484,7 @@ class QuestionController extends Controller
         'title' => 'required',
         'question' => 'required',
         'correct_answer' => '',
+        'possible_answers' => '',
       ]);
 
       $question->update($validatedData);

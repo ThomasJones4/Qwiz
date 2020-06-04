@@ -23,6 +23,7 @@
             <div class="col-md-12">
               <form action="{{ route('questions.update', $question) }}" method="POST">
                 @csrf
+                @method('PUT')
 
               <div class="form-group">
                 <label class="form-control-label" for="title">Question Category</label>

@@ -299,4 +299,6 @@ class UserTest extends DuskTestCase
       });
     }
 
+  
+
 }

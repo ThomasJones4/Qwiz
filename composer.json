@@ -19,7 +19,12 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
-        "mockery/mockery": "^1.3.1"
+        "mockery/mockery": "^1.3.1",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-dom": "*",
+        "ext-zip": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

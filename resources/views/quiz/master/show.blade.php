@@ -99,7 +99,7 @@
                                       <td>@if ($question->title == "%%scores%%") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
                                       <td>
                                         @if ($question->title == "%%scores%%") @else {{ htmlspecialchars_decode($question->question) }} @endif
-                                        @if (null != $question->possible_answers) <br> <i>Possible Answers: {{ str_replace(", ".$question->correct_answer, ", (".$question->correct_answer. " ✔️)",$question->possible_answers) }} </i> @endif
+                                        @if (null != $question->possible_answers) <br> <i>Possible Answers: {{ str_replace($question->correct_answer, "(".$question->correct_answer. " ✔️)",$question->possible_answers) }} </i> @endif
                                       </td>
 
                                       <td>@if ($question->title == "%%scores%%")
@@ -108,7 +108,7 @@
                                            <i class="fas fa-edit"></i>
                                         </button>
                                         @else
-                                        <a class="btn btn-sm btn-icon-only" href="{{ route('questions.edit', $question) }}" role="button">
+                                        <a class="btn btn-sm btn-icon-only" dusk="question-edit" href="{{ route('questions.edit', $question) }}" role="button">
                                           <i class="fas fa-edit"></i>
                                         </a>
                                         @endif

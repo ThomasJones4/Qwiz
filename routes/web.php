@@ -21,6 +21,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+
+Route::get('quizzes/{quiz}/header.png', 'QuizController@quiz_header')->name('social.quiz.header');
+Route::get('header.png', 'QuizController@social_header');
+
+
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
@@ -42,9 +47,6 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('quizzes/{quiz}/marking', 'QuizController@mark')->name('quiz.mark');
   Route::get('quizzes/{quiz}/marking/complete', 'QuizController@mark_finish')->name('quiz.finish.marking');
   Route::post('quizzes/{quiz}/questions', 'QuestionController@store')->name('quiz.question.store');
-
-  Route::get('quizzes/{quiz}/header.png', 'QuizController@quiz_header')->name('social.quiz.header');
-  Route::get('header.png', 'QuizController@social_header');
 
   Route::get('questions/{question}/up', 'QuestionController@move_up')->name('question.move.up');
   Route::get('questions/{question}/down', 'QuestionController@move_down')->name('question.move.down');
