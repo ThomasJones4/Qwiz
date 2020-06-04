@@ -19,6 +19,7 @@ class CreateQuestionsTable extends Migration
             $table->foreign('quiz_id')->references('id')->on('quizzes');
             $table->string('title');
             $table->string('question');
+            $table->string('possible_answers')->nullable();
             $table->boolean('released')->default('0');
             $table->integer('order');
             $table->string('correct_answer')->nullable();

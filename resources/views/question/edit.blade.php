@@ -17,32 +17,45 @@
         <h3 class="mb-0">Edit Question</h3>
       </div>
       <!-- Card body -->
-      <div class="card-body">
+        <div class="card-body">
 
-        <div class="row">
-          <div class="col-md-6">
-            <form action="{{ route('questions.update', $question) }}" method="POST">
-              @csrf
-              @method('PUT')
-            <div class="form-group">
-              <label class="form-control-label" for="title">Question Category</label>
-              <input type="text" class="form-control" id="title" name="title" value="{{ $question->title ?? '' }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-control-label" for="question">Question</label>
-              <input type="text" class="form-control" id="question" name="question" value="{{ $question->question ?? '' }}">
-            </div>
-          </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-control-label" for="correct_answer">Correct Answer</label>
-              <input type="text" class="form-control" id="correct_answer" name="correct_answer" value="{{ $question->correct_answer ?? '' }}">
-            </div>
-          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <form action="{{ route('questions.update', $question) }}" method="POST">
+                @csrf
 
+              <div class="form-group">
+                <label class="form-control-label" for="title">Question Category</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="eg. Music" value="{{ $question->title ?? '' }}">
+              </div>
+            </div>
+            </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-control-label" for="question">Question</label>
+                <input type="text" class="form-control" id="question" name="question" value="{{ $question->question ?? '' }}">
+              </div>
+            </div>
+            </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-control-label" for="correct_answer">Correct Answer</label>
+                <input type="text" class="form-control" id="correct_answer" name="correct_answer" value="{{ $question->correct_answer ?? '' }}">
+              </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-control-label" for="possible_answers">Possible Answers</label>
+                <input type="text" class="form-control" id="possible_answers" name="possible_answers" value="{{ $question->possible_answers ?? '' }}">
+              </div>
+            </div>
+          </div>
                   <div class="row">
                     @if($errors->any())
                       @foreach ($errors->all() as $error)
@@ -51,7 +64,7 @@
                     @endif
                   </div>
                     <button class="btn btn-primary" type="submit">Update question</button>
-
+</form>
         </div>
         <div class="row">
 

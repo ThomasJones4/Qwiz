@@ -29,65 +29,80 @@
                         </div>
                     @endif
                 </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">{{ __('Question') }}</th>
-                                @foreach ($quiz->users as $participant)
-                                <th scope="col">{{ $participant->name }}</th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="row">
+                  <div class="container">
+                    <div class="accordion" id="accordionAnswers">
                             @foreach ($all_questions as $question)
-                            @if ($question->title != "scores")
-                                <tr>
-                                  <td>{{ $question->question }}</td>
+                              @if ($question->title != "%%scores%%")
+                                <div class="card">
+                                    <div class="card-header" id="heading-{{$question->id}}" data-toggle="collapse" data-target="#collapse-{{$question->id}}" aria-expanded="true" aria-controls="collapse-{{$question->id}}">
+                                        <h5 class="mb-0"><i class="fas fa-chevron-down"></i> {{$question->question}}</h5>
+                                        @if (null != $question->answer) <h5 class="mb-0">Correct Answer : {{$question->answer}}</h5> @else <h5 class="mb-0"><i>No correct answer set</i></h5> @endif
+                                    </div>
+                                    <div id="collapse-{{$question->id}}" class="collapse @if ($loop->first) show @endif" aria-labelledby="heading-{{$question->id}}" data-parent="#accordionAnswers">
+                                        <div class="card-body">
 
-                                  @foreach ($question->quiz->users as $participant)
+                                          <div class="table-responsive">
+                                              <div>
+                                              <table class="table align-items-center">
+                                                  <thead class="thead-light">
+                                                      <tr>
+                                                          <th scope="col" class="sort" data-sort="name">Name</th>
+                                                          <th scope="col" class="sort" data-sort="budget">Answers</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody class="list">
+                                                    @foreach ($question->quiz->users as $participant)
+                                                      <tr>
+                                                          <th scope="row">
+                                                              <div class="media align-items-center">
+                                                                  <div class="media-body">
+                                                                      <span class="name mb-0 text-sm">{{$participant->name}}</span>
+                                                                  </div>
+                                                              </div>
+                                                          </th>
+                                                          <td>
+                                                            @foreach ($participant->question_responses($question)->sortByDesc('id') as $response)
+                                                              @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest:
+                                                                @if ($response->correct == "1")
+                                                                  <span id="response-{{$response->id}}" class="text-success">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button" >
+                                                                    <i id="response-toggle-{{$response->id}}" class="fas fa-times"></i>
+                                                                  </a>
+                                                                @else
+                                                                <span id="response-{{$response->id}}" class="text-danger">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button">
+                                                                  <i  id="response-toggle-{{$response->id}}" class="fas fa-check"></i>
+                                                                </a>
+                                                                @endif
+                                                              @else
+                                                                <strike>{{$response->answer}}<strike>
+                                                              @endif
+                                                            </br>
+                                                            @endforeach
+                                                          </td>
+                                                      </tr>
+                                                    @endforeach
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                        </div>
+                                  </div>
+                                </div>
+                              </div>
+                            @endif
+                          @endforeach
 
-                                    @if ($question->have_i_answered($question))
-                                    <td scope="col">
-                                      @foreach ($participant->question_responses($question)->sortByDesc('id') as $response)
-                                      @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest:
-                                        @if ($response->correct == "1")
-                                          <span id="response-{{$response->id}}" class="text-success">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button" >
-                                            <i id="response-toggle-{{$response->id}}" class="fas fa-times"></i>
-                                          </a>
-                                        @else
-                                        <span id="response-{{$response->id}}" class="text-danger">{{$response->answer}}</span> <a class="btn btn-sm btn-icon-only text-light response-toggle" id="{{$response->id}}" role="button">
-                                          <i  id="response-toggle-{{$response->id}}" class="fas fa-check"></i>
-                                        </a>
-                                        @endif
-                                      @else
-                                        <strike>{{$response->answer}}<strike>
-                                      @endif
-                                      </br>
-                                      @endforeach
-                                    </td>
-                                    @else
-                                      <td scope="col">Left Blank</td>
-                                    @endif
-                                  @endforeach
-                                </tr>
-                                @endif
-                            @endforeach
-
-                                </tr>
-                        </tbody>
-                    </table>
+                      </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
-  </br>
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
           <a href="{{ route('quiz.finish.marking', $quiz) }}" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Release Scores and next question</span>
+            <span id="next_question_btn_text" class="btn-inner--text">Release Scores</span>
             <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>
         </div>

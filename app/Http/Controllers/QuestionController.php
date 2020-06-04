@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Question;
 use App\Quiz;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -27,6 +29,7 @@ class QuestionController extends Controller
      */
     public function move_up(Question $question)
     {
+
 
         Gate::authorize('move_up', $question);
 
@@ -95,6 +98,7 @@ class QuestionController extends Controller
         'title' => 'required',
         'question' => 'required',
         'correct_answer' => '',
+        'possible_answers' => '',
       ]);
 
       $validatedData['order'] = ($quiz->questions()->get()->count() > 0)
@@ -102,6 +106,69 @@ class QuestionController extends Controller
           : 0 ;
 
       $quiz->questions()->create($validatedData);
+
+      return redirect()->route('quiz.master.show', $quiz);
+
+    }
+
+    /**
+     * Store a question from https://opentdb.com/ api
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_random(Request $request, Quiz $quiz)
+    {
+      Gate::authorize('view_master', $quiz);
+
+      $validatedData = $request->validate([
+        'difficulty' => 'required',
+        'category' => 'required',
+        'amount' => 'required|between:1,20'
+      ]);
+
+      $amount = 'amount='.($validatedData['amount']);
+      $difficulty = ($validatedData['difficulty'] != "any")? '&difficulty='.$validatedData['difficulty']: "";
+      $category = ($validatedData['category'] != "any")? '&category='.$validatedData['category']: "";
+
+
+      //get random question from api
+      $url = 'https://opentdb.com/api.php?'.$amount.$difficulty.$category;
+
+      $response = Http::get($url);
+      //dd($url );
+      if ($response->json()['response_code'] == "0") {
+        foreach($response->json()['results'] as $random_question) {
+
+          $new_question['title'] = Str::ucfirst($random_question['difficulty']).': '.$random_question['category'];
+          // if multiple, merge and randomise else add 'True or False?'
+          if (($random_question['type'] == "multiple")) {
+            $answers = array_merge(['correct'=>$random_question['correct_answer']],$random_question['incorrect_answers']);
+            shuffle($answers);
+            $answers = implode(array_values($answers), ", ");
+            $new_question['possible_answers'] = $answers;
+          }
+          $content =  (($random_question['type'] == "boolean")? "True or False? ":"") . $random_question['question'];
+          $new_question['question'] = $content;
+          $new_question['correct_answer'] = $random_question['correct_answer'];
+
+          //add before last if its a results screen
+          if ($quiz->questions()->get()->count() > 0) {
+            if ($quiz->questions->sortBy('order')->last()->title == "%%scores%%") {
+              $last = $quiz->questions->sortBy('order')->last();
+              $new_question['order'] = $last->order;
+              $last->order++;
+              $last->save();
+            } else {
+              $new_question['order'] = $quiz->questions->sortBy('order')->last()->order + 1;
+            }
+          } else {
+            $new_question['order'] = 0;
+          }
+
+          $quiz->questions()->create($new_question);
+        }
+      }
 
       return redirect()->route('quiz.master.show', $quiz);
 
@@ -432,6 +499,21 @@ class QuestionController extends Controller
      */
     public function destroy(Question $question)
     {
-        //
+      Gate::authorize('view_master', $question);
+
+      $quiz = $question->quiz;
+      $removed_order = $question->order;
+
+      $question->delete();
+
+      // as one index has been removed, decrease the order of all questions after the deleted
+      $question->quiz->questions->sortBy('order')->where('order', '>', $removed_order)->each(function (&$question) {
+        $question->order--;
+        $question->save();
+      });
+
+
+
+      return redirect()->route('quiz.master.show', $quiz);
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class Question extends Model
 {
 
-  protected $fillable = ['title', 'question', 'order', 'correct_answer'];
+  protected $fillable = ['title', 'question', 'order', 'correct_answer', 'possible_answers'];
 
   public function quiz() {
     return $this->belongsTo(Quiz::class);

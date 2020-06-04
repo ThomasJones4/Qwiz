@@ -62,7 +62,7 @@ class QuestionPolicy
     {
       Gate::authorize('view_master', $question->quiz);
 
-        return ($question->order != "0")
+        return ($question->order != "0" && !$question->released && !$question->quiz->questions->where('order', $question->order - 1)->first()->released)
           ? Response::allow()
           : Response::deny("Didn't think we'd every see you here. (004_up)");
     }
@@ -77,7 +77,7 @@ class QuestionPolicy
     {
       Gate::authorize('view_master', $question->quiz);
 
-      return ($question->order != $question->quiz->questions->count() - 1)
+      return ($question->order != $question->quiz->questions->count() - 1  && !$question->released)
         ? Response::allow()
         : Response::deny("Didn't think we'd every see you here. (004_down)");
     }
@@ -103,7 +103,7 @@ class QuestionPolicy
     {
       Gate::authorize('view_master', $question->quiz);
 
-      return ($question->title != "%%scores%%" && $question->question == "-")
+      return ($question->title != "%%scores%%" && $question->question != "-")
         ? Response::allow()
         : Response::deny("Didn't think we'd every see you here. (004_edit)");
     }
@@ -129,7 +129,12 @@ class QuestionPolicy
      */
     public function delete(User $user, Question $question)
     {
-        //
+
+      Gate::authorize('view_master', $question);
+
+      return (!$question->released && $question->responses->count() == 0)
+        ? Response::allow()
+        : Response::deny("You can not delete this question (006)");
     }
 
     /**

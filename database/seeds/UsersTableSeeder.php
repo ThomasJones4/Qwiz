@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Quiz;
 use App\Question;
+use App\Response;
 
 
 class UsersTableSeeder extends Seeder
@@ -36,8 +37,19 @@ class UsersTableSeeder extends Seeder
           });
         });
 
-        factory(User::class, 300)->create()->each(function ($user) {
-          // choose a quiz and do questions
+        $quizzes = App\Quiz::all();
+
+        factory(User::class, 300)->create()->each(function ($user) use ($quizzes){
+          $user->quizzes()->saveMany($quizzes->random(rand(1, 3)));
+          $user->quizzes()->each(function ($quiz) use ($user){
+            $quiz->questions()->each(function ($question) use ($user) {
+              $response = new Response;
+              $response->user_id = $user->id;
+              $response->question_id = $question->id;
+              $response->answer = "My Answer";
+              $response->save();
+            });
+          });
         });
 
 

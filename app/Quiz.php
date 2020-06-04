@@ -46,4 +46,30 @@ class Quiz extends Model
        return $this->questions()->get()->where('released', "0")->sortBy('order')->first();
     }
 
+    public function get_participant_mark(User $user) {
+      $mark = 0;
+      $this->questions()->each(function ($question) use ($user, &$mark) {
+         if (null != $question->responses->where('user_id', $user->id)->sortBy('created_at')->last() && $question->responses->where('user_id', $user->id)->sortBy('created_at')->last()->correct) {
+           $mark++;
+         }
+       });
+       return $mark;
+    }
+
+    public function conforms_to_scores_screen_rules() {
+      $last_question_order= -1;
+
+      //dd($this->questions()->where('title', '%%scores%%')->get());
+
+      foreach ($this->questions()->where('title', '%%scores%%')->get() as $question) {
+        if ($question->order == $last_question_order + 1) {
+          return false;
+        } else {
+          $last_question_order = $question->order;
+        }
+      }
+      return true;
+
+    }
+
 }

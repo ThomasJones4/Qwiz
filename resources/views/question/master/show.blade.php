@@ -14,6 +14,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">{{ $question->question }}</h1>
+                        @if (null != $question->possible_answers)<h2 class="text-white"><i>Possible Answers: {{ $question->possible_answers }}</i></h2>  @endif
                     </div>
                 </div>
             </div>

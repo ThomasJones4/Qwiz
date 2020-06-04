@@ -20,7 +20,7 @@
       <div class="card-body">
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <form action="{{ route('quiz.question.store', $quiz) }}" method="POST">
               @csrf
             <div class="form-group">
@@ -28,20 +28,34 @@
               <input type="text" class="form-control" id="title" name="title" placeholder="eg. Music" value="{{ old('title') }}">
             </div>
           </div>
-          <div class="col-md-6">
+          </div>
+
+        <div class="row">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="form-control-label" for="question">Question</label>
               <input type="text" class="form-control" id="question" name="question" value="{{ old('question') }}">
             </div>
           </div>
           </div>
-          <div class="col-md-6">
+
+        <div class="row">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="form-control-label" for="correct_answer">Correct Answer</label>
               <input type="text" class="form-control" id="correct_answer" name="correct_answer" value="{{ old('correct_answer') }}">
             </div>
           </div>
+          </div>
+          <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label" for="possible_answers">Possible Answers</label>
+              <input type="text" class="form-control" id="possible_answers" name="possible_answers" value="{{ old('possible_answers') }}">
+            </div>
+          </div>
         </div>
+      </div>
 
         <div class="row">
           @if($errors->any())
@@ -50,8 +64,13 @@
             @endforeach
           @endif
         </div>
-          <button class="btn btn-primary" type="submit">Add question</button>
-          <h3 >Add then edit this question to add media </h3>
+          <button class="btn btn-primary mb-2" type="submit">Add question</button>
+
+        <div class="row">
+          <div class="container text-center my-3">
+          <h3> To add media, Save the question then modify it </h3>
+        </div>
+        </div>
         </form>
       </div>
     </div>

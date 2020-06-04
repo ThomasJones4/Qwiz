@@ -6,14 +6,17 @@
             <div class="header-body text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ $question->title }}</h1>
+                        <h1 class="text-white">@if ($question->title != "%%scores%%") {{ $question->title }} @else Scores @endif</h1>
                     </div>
                 </div>
             </div>
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
+                      @if ($question->title != "%%scores%%")
                         <h1 class="text-white">{{ $question->question }}</h1>
+                        @if (null != $question->possible_answers)<h2 class="text-white"><i>Possible Answers: {{ $question->possible_answers }}</i></h2>  @endif
+                      @endif
                     </div>
                 </div>
             </div>

@@ -38,6 +38,20 @@ class QuizPolicy
     }
 
     /**
+     * Determine whether the quiz has questions that can still be edited
+     *
+     * @param  \App\User  $user
+     * @param  \App\Quiz  $quiz
+     * @return mixed
+     */
+    public function editable(User $user, Quiz $quiz)
+    {
+        return ($quiz->questions()->where('released', '0')->count() > 0)
+                  ? Response::allow()
+                  : Response::deny('This quiz is not longer editable (005)');
+    }
+
+    /**
      * Determine whether the user can view the model.
      *
      * @param  \App\User  $user

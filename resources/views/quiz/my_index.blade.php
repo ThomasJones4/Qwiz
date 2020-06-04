@@ -41,7 +41,7 @@
                                 <th scope="col">{{ __('Invite code') }}</th>
                                 <th scope="col">{{ __('Participants') }}</th>
                                 <th scope="col">Edit</th>
-                                <th scope="col">Start Quiz</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,9 +61,11 @@
                                   </td>
                                   <td>{{ $quiz->users->count() }}</td>
                                   <td>
+                                    @can('editable', $quiz)
                                     <a class="btn btn-sm btn-icon-only " href="{{ route('quiz.master.show', $quiz) }}" role="button">
                                       <i class="fas fa-edit"></i>
                                     </a>
+                                    @endcan
                                 </td>
                                 @if($quiz->is_finish())
                                   <td>
@@ -75,6 +77,24 @@
                                 <td>
                                   <a class="btn btn-sm " href="{{ route('question.master', $quiz->latest_unreleased()) }}" role="button">
                                     <i class="fas fa-play-circle"></i> Contunue With Live Quiz
+                                  </a>
+                                </td>
+                                @elseif ($quiz->questions->where('title', '!=', '%%scores%%')->count() <= 0)
+                                <td>
+                                  <a class="btn btn-sm " href="{{ route('quiz.master.show', $quiz) }}" role="button">
+                                    <i class="fas fa-play-circle"></i> Add Your First Question
+                                  </a>
+                                </td>
+                                @elseif($quiz->questions->sortBy('order')->last()->title != "%%scores%%")
+                                <td>
+                                  <a class="btn btn-sm " href="{{ route('quiz.master.show', $quiz) }}" role="button">
+                                    <i class="fas fa-play-circle"></i> Add A Results Screen
+                                  </a>
+                                </td>
+                                @elseif(!$quiz->conforms_to_scores_screen_rules())
+                                <td>
+                                  <a class="btn btn-sm " href="{{ route('quiz.master.show', $quiz) }}" role="button">
+                                    <i class="fas fa-play-circle"></i> Remove Consecutive Result Screens
                                   </a>
                                 </td>
                                 @else
@@ -113,6 +133,7 @@
                                   <i class="fas fa-play-circle"></i> {{ __('Start Quiz 🎉') }}
                                 </a>
                               </td>
+
                                 @endif
                                 </tr>
                                 @endforeach

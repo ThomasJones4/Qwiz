@@ -7,6 +7,8 @@ use App\Question;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Intervention\Image\Facades\Image as Image;
 
 class QuizController extends Controller
 {
@@ -18,6 +20,111 @@ class QuizController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function quiz_header(Quiz $quiz)
+    {
+      $x = 454;
+      $y = 320;
+      $img = Image::canvas($x, $y, '#ddd');
+      $img->insert(resource_path().'\images\qwiz_gradient_background.png');
+      // draw a blue line
+
+      $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(60);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $y = $y + 200;
+      $img->text($quiz->quiz_master->name, $x/2, $y/4, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(30);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $img->text('as invited tou to join their quiz', $x/2, $y/4+40, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(20);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $img->text($quiz->name, $x/2, $y/4+65, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(30);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $img->text('@ '. $quiz->scheduled_start, $x/2, $y/4+100, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(20);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      return response($img->encode('png'))->header('Content-Type', 'image/png');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function social_header()
+    {
+      $x = 454;
+      $y = 320;
+      $img = Image::canvas($x, $y, '#ddd');
+      $img->insert(resource_path().'\images\qwiz_gradient_background.png');
+      // draw a blue line
+
+      $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(60);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $img->text('Create quizzes and play live with friends.', $x/2, $y/2, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(20);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      $img->text('Bring your own or genarate random questions', $x/2, $y/2+30, function($font) {
+          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
+          $font->size(20);
+          $font->color('#fff');
+          $font->align('center');
+          $font->valign('top');
+          $font->angle(0);
+      });
+
+      return response($img->encode('png'))->header('Content-Type', 'image/png');
     }
 
     /**
@@ -59,6 +166,7 @@ class QuizController extends Controller
     public function show(Quiz $quiz)
     {
       Gate::authorize('view', $quiz);
+      Gate::authorize('editable', $quiz);
 
       return view('quiz.show', compact('quiz'));
     }
@@ -209,10 +317,17 @@ class QuizController extends Controller
       Gate::authorize('view_master', $quiz);
 
       $first_unreleased = $quiz->questions->where('released', "0")->sortBy('order')->first();
+
+      // if marking has already been done / quiz already finished, go to overview
+      if (null == $first_unreleased) {
+        return redirect()->route('quiz.overview', $quiz);
+      }
+
       $first_unreleased->released = "1";
       $first_unreleased->save();
       $first_unreleased = $quiz->questions->where('released', "0")->sortBy('order')->first();
 
+      // if no more question left, go to overview
       if (null == $first_unreleased) {
         return redirect()->route('quiz.overview', $quiz);
       }
@@ -232,7 +347,30 @@ class QuizController extends Controller
 
       Gate::authorize('view', $quiz);
 
-      dd('overview');
+      // sort users by total
+      $su = [];
+      $su = $quiz->users->each(function($user) use ($quiz, &$su) {
+            $user['total'] = $quiz->get_participant_mark($user);
+        });
+      $su = $su->sortByDesc('total');
+
+      $first_place_threshold = $su->first()->total;
+
+      $second_place_threshold = $su->where('total', '<', $first_place_threshold)->first();
+      $second_place_threshold = (null != $second_place_threshold)? $second_place_threshold->total : $first_place_threshold;
+
+      $third_place_threshold = $su->where('total', '<', $second_place_threshold)->first();
+      $third_place_threshold = (null != $third_place_threshold)? $third_place_threshold->total : $second_place_threshold;
+
+      $penultimate_place_threshold = $su->where('total', '<', 'third_place_threshold')->sortBy('total')->first();
+      $penultimate_place_threshold = (null != $penultimate_place_threshold)? $penultimate_place_threshold->total : 1;
+      //
+      // $penultimate_place_threshold = $su->where('total', '=', $smallest_total)->sortBy('total')->skip(1)->take(1)->first();
+      // $penultimate_place_threshold = (null != $penultimate_place_threshold)? $penultimate_place_threshold->total : -1;
+
+      //dd( compact('first_place_threshold', 'second_place_threshold', 'third_place_threshold', 'penultimate_place_threshold'));
+
+      return view('quiz.overview', compact('quiz', 'su', 'first_place_threshold', 'second_place_threshold', 'third_place_threshold', 'penultimate_place_threshold'));
     }
 
 

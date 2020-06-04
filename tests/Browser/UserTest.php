@@ -256,4 +256,47 @@ class UserTest extends DuskTestCase
                 ;
       });
     }
+
+    /**
+     * Test a quiz master can not edit a question once it has been released
+     *
+     * @return void
+     */
+    public function testUserCanNotEditReleasedQuestion()
+    {
+      $user = factory(User::class)->create();
+
+      $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit('/quizzes/mine')
+                ->assertSee('Create New Quiz')
+                ->clickLink('Create New Quiz')
+                ->assertPathIs('/quizzes/create')
+                ->assertSee('Create a new quiz')
+                ->type('name', 'The big new quiz')
+                ->type('scheduled_start', '2019-04-30')
+                ->press('Create Quiz')
+                ->assertSee('The big new quiz Questions')
+                ->assertSee('Add new Question')
+                ->clickLink('Add new Question')
+                ->type('title', 'Cat #1')
+                ->type('question', 'But is it really?')
+                ->press('Add question')
+                ->assertSee('Cat #1')
+                ->assertSee('Add result screen')
+                ->clickLink('Add result screen')
+                ->assertSee('Scores')
+                ->click('@start-button')
+                ->assertSee('Yes, everyones here. Let\'s Go!')
+                ->click('@modal-start-button')
+                ->assertSee('Cat #1')
+                ->assertSee('But is it really?')
+                ->assertSee('Scores')
+                ;
+            $browser->visit(route('quiz.master.show', $user->my_quizzes()->first(), false))
+              ->assertPresent('@disabled-edit')
+                ;
+      });
+    }
+
 }
