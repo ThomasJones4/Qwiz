@@ -91,6 +91,9 @@ class QuizController extends Controller
      */
     public function social_header()
     {
+
+      dd(resource_path().'\images\qwiz_gradient_background.png');
+
       $x = 454;
       $y = 320;
       $img = Image::canvas($x, $y, '#ddd');
