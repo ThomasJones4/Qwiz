@@ -92,7 +92,7 @@ class QuizController extends Controller
     public function social_header()
     {
 
-      dd(resource_path().'\images\qwiz_gradient_background.png');
+      dd(realpath(__DIR__));
 
       $x = 454;
       $y = 320;
