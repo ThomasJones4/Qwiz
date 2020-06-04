@@ -92,12 +92,10 @@ class QuizController extends Controller
     public function social_header()
     {
 
-      dd(realpath(__DIR__));
-
       $x = 454;
       $y = 320;
       $img = Image::canvas($x, $y, '#ddd');
-      $img->insert(resource_path().'\images\qwiz_gradient_background.png');
+      $img->insert('../../../resources\images\qwiz_gradient_background.png');
       // draw a blue line
 
       $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
