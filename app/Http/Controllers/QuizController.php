@@ -22,111 +22,111 @@ class QuizController extends Controller
         //
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function quiz_header(Quiz $quiz)
-    {
-      $x = 454;
-      $y = 320;
-      $img = Image::canvas($x, $y, '#ddd');
-      $img->insert(resource_path().'\images\qwiz_gradient_background.png');
-      // draw a blue line
-
-      $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(60);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $y = $y + 200;
-      $img->text($quiz->quiz_master->name, $x/2, $y/4, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(30);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $img->text('as invited tou to join their quiz', $x/2, $y/4+40, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(20);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $img->text($quiz->name, $x/2, $y/4+65, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(30);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $img->text('@ '. $quiz->scheduled_start, $x/2, $y/4+100, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(20);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      return response($img->encode('png'))->header('Content-Type', 'image/png');
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function social_header()
-    {
-
-      $x = 454;
-      $y = 320;
-      $img = Image::canvas($x, $y, '#ddd');
-      $img->insert('../../../resources\images\qwiz_gradient_background.png');
-      // draw a blue line
-
-      $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(60);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $img->text('Create quizzes and play live with friends.', $x/2, $y/2, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(20);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      $img->text('Bring your own or genarate random questions', $x/2, $y/2+30, function($font) {
-          $font->file(resource_path().'\fonts\Open_Sans\OpenSans-SemiBold.ttf');
-          $font->size(20);
-          $font->color('#fff');
-          $font->align('center');
-          $font->valign('top');
-          $font->angle(0);
-      });
-
-      return response($img->encode('png'))->header('Content-Type', 'image/png');
-    }
+    // /**
+    //  * Display a listing of the resource.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function quiz_header(Quiz $quiz)
+    // {
+    //   $x = 454;
+    //   $y = 320;
+    //   $img = Image::canvas($x, $y, '#ddd');
+    //   $img->insert('qwiz_gradient_background.png');
+    //   // draw a blue line
+    //
+    //   $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(60);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $y = $y + 200;
+    //   $img->text($quiz->quiz_master->name, $x/2, $y/4, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(30);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $img->text('has invited tou to join their quiz', $x/2, $y/4+40, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(20);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $img->text($quiz->name, $x/2, $y/4+65, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(30);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $img->text('@ '. $quiz->scheduled_start, $x/2, $y/4+100, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(20);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   return response($img->encode('png'))->header('Content-Type', 'image/png');
+    // }
+    //
+    // /**
+    //  * Display a listing of the resource.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function social_header()
+    // {
+    //
+    //   $x = 454;
+    //   $y = 320;
+    //   $img = Image::canvas($x, $y, '#ddd');
+    //   $img->insert('/qwiz_gradient_background.png');
+    //   // draw a blue line
+    //
+    //   $img->text('Qwiz.co.uk', $x/2, $y/6, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(60);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $img->text('Create quizzes and play live with friends.', $x/2, $y/2, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(20);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   $img->text('Bring your own or genarate random questions', $x/2, $y/2+30, function($font) {
+    //       $font->file('Open_Sans\OpenSans-SemiBold.ttf');
+    //       $font->size(20);
+    //       $font->color('#fff');
+    //       $font->align('center');
+    //       $font->valign('top');
+    //       $font->angle(0);
+    //   });
+    //
+    //   return response($img->encode('png'))->header('Content-Type', 'image/png');
+    // }
 
     /**
      * Show the form for creating a new resource.

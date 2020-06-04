@@ -1,10 +1,8 @@
 <!-- Top navbar -->
-<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
-    <div class="container-fluid">
-        <!-- Brand -->
-        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="{{ route('home') }}">{{ __('Home') }}</a>
+<nav class="navbar navbar-top navbar-expand navbar-light" id="navbar-main">
+    <div class="container">
         <!-- User -->
-        <ul class="navbar-nav align-items-center d-none d-md-flex">
+        <ul class="navbar-nav align-items-center d-sm">
             <li class="nav-item">
                 <a class="nav-link nav-link-icon" href="{{ route('show.my.quiz') }}">
                     <i class="ni ni-circle-08"></i>

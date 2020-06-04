@@ -25,15 +25,11 @@
         <meta property="og:type" content="website">
         <meta property="og:url" content="http://qwiz.co.uk/">
         <meta property="og:title" content="Qwiz - Make your own quiz and play with friends">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="http://quiz.co.uk/header.png">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="http://qwiz.co.uk/">
         <meta property="twitter:title" content="Qwiz - Make your own quiz and play with friends">
-        <meta property="twitter:description" content="">
-        <meta property="twitter:image" content="http://quiz.co.uk/header.png">
 
     </head>
     <body class="{{ $class ?? '' }}">
