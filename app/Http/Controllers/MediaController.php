@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Question;
 use App\Media;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use League\Flysystem\Cached\Storage\Memcached;
+
 
 class MediaController extends Controller
 {
@@ -50,9 +53,7 @@ class MediaController extends Controller
 
     $media->extension = $request->file->extension();
 
-    $media->url = time().'.'.$request->file->extension();
-
-    $request->file->move(public_path('quiz-media'), $media->url);
+    $media->url = "https://qwiz-public-media.s3.eu-west-2.amazonaws.com/".$request->file('file')->store('images', 's3');
 
     $media->question_id = $question->id;
     $media->save();

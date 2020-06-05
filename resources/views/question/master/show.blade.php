@@ -30,15 +30,15 @@
                             <div class="col-sm">
                               <h3 class="text-white">{{$count}})</h3>
                                   @if ($media->type == 'image')
-                                    <img max-width="20%" height="auto" src="{{ asset('quiz-media') . '/' .$media->url}}">
+                                    <img max-width="20%" height="auto" src="{{ $media->url}}">
                                   @elseif ($media->type == 'video')
                                     <video width="400" controls>
-                                      <source src="{{ asset('quiz-media') . '/' .$media->url}}" type="video/{{$media->extension}}">
+                                      <source src="{{ $media->url}}" type="video/{{$media->extension}}">
                                       Your browser does not support HTML video.
                                     </video>
                                   @elseif ($media->type == 'audio')
                                   <audio controls>
-                                    <source src="{{ asset('quiz-media') . '/' .$media->url}}" type="audio/mp3">
+                                    <source src="{{$media->url}}" type="audio/mp3">
                                     Your browser does not support the audio element.
                                   </audio>
                                   @endif

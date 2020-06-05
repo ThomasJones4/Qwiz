@@ -57,12 +57,14 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'key' => env('AWS_ACCESS_KEY_ID', 'AKIAQLZS7DZQOTDRLSPL'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY', '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'),
             'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'bucket' => env('AWS_BUCKET', 'qwiz-public-media'),
+            'url' => env('AWS_URL', 'https://qwiz-public-media.s3.eu-west-2.amazonaws.com/'),
             'endpoint' => env('AWS_ENDPOINT'),
+            'visibility' => 'public',
+
         ],
 
     ],
