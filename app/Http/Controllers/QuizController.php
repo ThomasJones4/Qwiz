@@ -167,7 +167,7 @@ class QuizController extends Controller
     public function show(Quiz $quiz)
     {
       Gate::authorize('view', $quiz);
-      Gate::authorize('editable', $quiz);
+      //Gate::authorize('editable', $quiz);
 
       return view('quiz.show', compact('quiz'));
     }
