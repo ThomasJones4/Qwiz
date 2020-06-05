@@ -124,8 +124,10 @@ class QuestionController extends Controller
       $validatedData = $request->validate([
         'difficulty' => 'required',
         'category' => 'required',
-        'amount' => 'required|between:1,20'
+        'amount' => 'required|max:20'
       ]);
+
+      $validatedData['amount'] = ($validatedData['amount'] > 20)? 20: $validatedData['amount'];
 
       $amount = 'amount='.($validatedData['amount']);
       $difficulty = ($validatedData['difficulty'] != "any")? '&difficulty='.$validatedData['difficulty']: "";
@@ -138,6 +140,7 @@ class QuestionController extends Controller
       $response = Http::get($url);
       //dd($url );
       if ($response->json()['response_code'] == "0") {
+        $added = $quiz->questions()->get()->count();
         foreach($response->json()['results'] as $random_question) {
 
           $new_question['title'] = Str::ucfirst($random_question['difficulty']).': '.$random_question['category'];
@@ -159,14 +162,21 @@ class QuestionController extends Controller
               $new_question['order'] = $last->order;
               $last->order++;
               $last->save();
+              $added++;
             } else {
-              $new_question['order'] = $quiz->questions->sortBy('order')->last()->order + 1;
+              $added++;
+              $new_question['order'] = $added-1;
             }
           } else {
             $new_question['order'] = 0;
+            $added++;
           }
-
+          echo ("#COUNT#:" . $quiz->questions()->get()->count());
           $quiz->questions()->create($new_question);
+
+          // unset question so that info does not leak to next question in loops
+          unset($random_question);
+          unset($new_question);
         }
       }
 

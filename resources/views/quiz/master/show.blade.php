@@ -98,7 +98,7 @@
                                       <td>{{ $question->order + 1 }}</td>
                                       <td>@if ($question->title == "%%scores%%") {{ __('Scores') }} @else {{ $question->title }} @endif</td>
                                       <td>
-                                        @if ($question->title == "%%scores%%") @else {{ htmlspecialchars_decode($question->question) }} @endif
+                                        @if ($question->title != "%%scores%%") {{ html_entity_decode(htmlspecialchars_decode($question->question)) }} @endif
                                         @if (null != $question->possible_answers) <br> <i>Possible Answers: {{ str_replace($question->correct_answer, "(".$question->correct_answer. " ✔️)",$question->possible_answers) }} </i> @endif
                                       </td>
 

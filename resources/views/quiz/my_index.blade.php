@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="header bg-gradient-primary pb-6 pt-5 pt-md-8">
+@if ($participant_quizzes->count() + $owned_quizzes->count() > 0)
+  @include('layouts.headers.cards')
+@endif
+
+<div class="header bg-gradient-primary pb-6 @if ($participant_quizzes->count() + $owned_quizzes->count() == 0) pt-5 pt-md-8 @endif">
     <div class="container-fluid">
         <div class="header-body">
         </div>

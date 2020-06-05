@@ -348,6 +348,10 @@ class QuizController extends Controller
 
       Gate::authorize('view', $quiz);
 
+      if (!$quiz->is_finish()) {
+        return redirect()->route('quiz.show', $quiz);
+      }
+
       // sort users by total
       $su = [];
       $su = $quiz->users->each(function($user) use ($quiz, &$su) {

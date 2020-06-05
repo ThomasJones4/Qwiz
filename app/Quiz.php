@@ -39,7 +39,7 @@ class Quiz extends Model
     }
 
     public function is_finish() {
-      return ($this->questions()->where('released', "0")->get()->count() == 0);
+      return ($this->questions()->where('released', "0")->get()->count() == 0 && $this->invite_code == null);
     }
 
     public function latest_unreleased() {
