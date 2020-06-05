@@ -51,8 +51,9 @@ class MediaController extends Controller
     }
 
     $media->extension = $request->file->extension();
-
-    $media->url = "https://qwiz-public-media.s3.eu-west-2.amazonaws.com/".$request->file('file')->store('images', 's3');
+    
+    //upload to s3 bucket
+    $media->url = config('filesystems.disks.s3.url').$request->file('file')->store('images', 's3');
 
     $media->question_id = $question->id;
     $media->save();
