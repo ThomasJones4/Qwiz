@@ -7,7 +7,6 @@ use App\Media;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
-use League\Flysystem\Cached\Storage\Memcached;
 
 
 class MediaController extends Controller
