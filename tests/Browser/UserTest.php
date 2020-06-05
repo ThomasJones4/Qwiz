@@ -25,7 +25,7 @@ class UserTest extends DuskTestCase
                   ->type('email', $user->email)
                   ->type('password', 'password')
                   ->press('Sign in')
-                  ->assertPathIs('/home');
+                  ->assertPathIs('/quizzes/mine');
         });
     }
 
@@ -136,7 +136,7 @@ class UserTest extends DuskTestCase
                 ->type('email', $participant->email)
                 ->type('password', 'password')
                 ->press('Sign in')
-                ->assertPathIs('/home')
+                ->assertPathIs('/quizzes/mine')
                 ->visit(route('show.join.quiz', Quiz::find($quiz_id), false))
                 ->type('invite_code', $invite_code)
                 ->press('Join')
@@ -299,6 +299,6 @@ class UserTest extends DuskTestCase
       });
     }
 
-  
+
 
 }

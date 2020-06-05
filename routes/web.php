@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 
+// update $redirectTo in login and register controllers if route below changed (SEARCH: show.my.quiz, quizzes/mine)
   Route::get('quizzes/mine', 'QuizController@index_mine')->name('show.my.quiz');
   Route::get('quizzes/{quiz}/master', 'QuizController@show_master')->name('quiz.master.show');
 
