@@ -37,7 +37,7 @@
                                 <div class="card">
                                     <div class="card-header" id="heading-{{$question->id}}" data-toggle="collapse" data-target="#collapse-{{$question->id}}" aria-expanded="true" aria-controls="collapse-{{$question->id}}">
                                         <h5 class="mb-0"><i class="fas fa-chevron-down"></i> {{$question->question}}</h5>
-                                        @if (null != $question->answer) <h5 class="mb-0">Correct Answer : {{$question->answer}}</h5> @else <h5 class="mb-0"><i>No correct answer set</i></h5> @endif
+                                        @if (null != $question->correct_answer) <h5 class="mb-0">Correct Answer : {{$question->correct_answer}}</h5> @else <h5 class="mb-0"><i>No correct answer set</i></h5> @endif
                                     </div>
                                     <div id="collapse-{{$question->id}}" class="collapse @if ($loop->first) show @endif" aria-labelledby="heading-{{$question->id}}" data-parent="#accordionAnswers">
                                         <div class="card-body">
