@@ -106,7 +106,7 @@
 
     $(document).ready(function(){
      fetchdata();
-     interval = setInterval(fetchdata,1000);
+     interval = setInterval(fetchdata,2000);
     });
     </script>
 @endpush

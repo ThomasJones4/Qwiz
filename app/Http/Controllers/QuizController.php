@@ -300,7 +300,13 @@ class QuizController extends Controller
 
       Gate::authorize('view_master', $quiz);
 
-      $all_questions = $quiz->questions->where('released', "1")->sortBy('order');
+      $last_marking_order = (null != $quiz->questions->where('title', '%%scores%%')->where('released')->last())
+                              ? $quiz->questions->where('title', '%%scores%%')->where('released')->last()->order + 1
+                              : 0;
+
+      //dd($quiz->questions->where('released')->where('order', '>=', $last_marking_order)->sortBy('order'));//->sortBy('order'));
+
+      $all_questions = $quiz->questions->where('released')->where('order', '>=', $last_marking_order)->sortBy('order');
 
       return view('quiz.master.marking', compact('quiz', 'all_questions'));
 
@@ -352,30 +358,7 @@ class QuizController extends Controller
         return redirect()->route('quiz.show', $quiz);
       }
 
-      // sort users by total
-      $su = [];
-      $su = $quiz->users->each(function($user) use ($quiz, &$su) {
-            $user['total'] = $quiz->get_participant_mark($user);
-        });
-      $su = $su->sortByDesc('total');
-
-      $first_place_threshold = $su->first()->total;
-
-      $second_place_threshold = $su->where('total', '<', $first_place_threshold)->first();
-      $second_place_threshold = (null != $second_place_threshold)? $second_place_threshold->total : $first_place_threshold;
-
-      $third_place_threshold = $su->where('total', '<', $second_place_threshold)->first();
-      $third_place_threshold = (null != $third_place_threshold)? $third_place_threshold->total : $second_place_threshold;
-
-      $penultimate_place_threshold = $su->where('total', '<', 'third_place_threshold')->sortBy('total')->first();
-      $penultimate_place_threshold = (null != $penultimate_place_threshold)? $penultimate_place_threshold->total : 1;
-      //
-      // $penultimate_place_threshold = $su->where('total', '=', $smallest_total)->sortBy('total')->skip(1)->take(1)->first();
-      // $penultimate_place_threshold = (null != $penultimate_place_threshold)? $penultimate_place_threshold->total : -1;
-
-      //dd( compact('first_place_threshold', 'second_place_threshold', 'third_place_threshold', 'penultimate_place_threshold'));
-
-      return view('quiz.overview', compact('quiz', 'su', 'first_place_threshold', 'second_place_threshold', 'third_place_threshold', 'penultimate_place_threshold'));
+      return view('quiz.overview', compact('quiz'));
     }
 
 

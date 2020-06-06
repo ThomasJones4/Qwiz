@@ -44,19 +44,20 @@
                                 </tr>
                             </thead>
                             <tbody class="list">
-                              @foreach ($su as $participant)
+
+                              @foreach ($quiz->ranked_users() as $participant)
                                 <tr>
                                     <th>
-                                      @if ($participant->total == $first_place_threshold)
-                                      <i style="font-size: 3em; color: Gold;" class="fas fa-trophy text-center"></i>
-                                      @elseif ($participant->total == $second_place_threshold)
-                                      <i style="font-size: 2em; color: Silver;" class="fas fa-trophy text-center"></i>
-                                      @elseif ($participant->total == $third_place_threshold)
-                                      <i style="font-size: 1em; color: #cd7f32;" class="fas fa-trophy text-center"></i>
-                                      @elseif ($participant->total == $penultimate_place_threshold)
-                                      snd to last
+                                      @if ($participant->rank == 1)
+                                        <i style="font-size: 3em; color: Gold;" class="fas fa-trophy text-center"></i>
+                                      @elseif ($participant->rank == 2)
+                                        <i style="font-size: 2em; color: Silver;" class="fas fa-trophy text-center"></i>
+                                      @elseif ($participant->rank == 3)
+                                        <i style="font-size: 1em; color: #cd7f32;" class="fas fa-trophy text-center"></i>
+                                      @elseif ($participant->rank == -2)
+                                        snd to last
                                       @else
-                                        {{$loop->index + 1}}
+
                                       @endif
                                     </th>
                                     <th scope="row">
@@ -78,15 +79,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
-          <a href="{{ route('quiz.finish.marking', $quiz) }}" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-            <span id="next_question_btn_text" class="btn-inner--text">Release Scores</span>
-            <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
+          <a href="{{ route('quizzes.create') }}" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+            <span id="next_question_btn_text" class="btn-inner--text">Make your own quiz</span>
           </a>
         </div>
     </div>

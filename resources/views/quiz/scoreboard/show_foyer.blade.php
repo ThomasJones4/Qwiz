@@ -8,13 +8,13 @@
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">scoreboard</h1>
                         <h1 class="text-white">foyer</h1>
-                        <h1 class="text-white">{{ $question->question }}</h1>
+                        <h1 class="text-white">{{ html_entity_decode(htmlspecialchars_decode($question->question)) }}</h1>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">

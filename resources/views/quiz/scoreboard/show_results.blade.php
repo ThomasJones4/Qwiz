@@ -1,85 +1,174 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="header bg-gradient-primary py-7 py-lg-8">
-        <div class="container">
-            <div class="header-body text-center mt-7 mb-7">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">scoreboard</h1>
-                        <h1 class="text-white">results</h1>
-                        <h1 class="text-white">{{ $question->question }}</h1>
-                    </div>
+<div class="header bg-gradient-primary py-7 py-lg-8">
+    <div class="container">
+        <div class="header-body text-center mt-7 mb-7">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6">
+                    <h1 class="text-white">Results</h1>
+                    <h2 class="text-white">{{$quiz->name}}</h1>
                 </div>
             </div>
+        </div>
+        <div class="card shadow">
 
-            <div class="card shadow">
-                <div class="card-header border-0">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h3 class="mb-0">Scores</h3>
-                        </div>
+
+            <div class="col-12">
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-
-                <div class="col-12">
-                    @if (session('status'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('status') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
-                </div>
+                @endif
+            </div>
+            <div class="row">
+              <div class="container">
                 <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
+                    <div>
+                    <table class="table align-items-center">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">{{ __('Question') }}</th>
-                                @foreach ($question->quiz->users as $participant)
-                                  <th scope="col">{{ $participant->name }}</th>
-                                @endforeach
+                                <th scope="col" class="sort" data-sort="name">#</th>
+                                <th scope="col" class="sort" data-sort="name">Name</th>
+                                <th scope="col" class="sort" data-sort="budget">Answers</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($all_questions as $loop_question)
-                                <tr>
-                                  <td>{{ $question->$loop_question }}</td>
+                        <tbody class="list">
+                          @foreach ($quiz->ranked_users() as $participant)
+                            <tr>
+                              <th>
+                                @if ($participant->rank == 1)
+                                  <i style="font-size: 3em; color: Gold;" class="fas fa-trophy text-center"></i>
+                                @elseif ($participant->rank == 2)
+                                  <i style="font-size: 2em; color: Silver;" class="fas fa-trophy text-center"></i>
+                                @elseif ($participant->rank == 3)
+                                  <i style="font-size: 1em; color: #cd7f32;" class="fas fa-trophy text-center"></i>
+                                @elseif ($participant->rank == -2)
+                                  snd to last
+                                @else
 
-                                  @foreach ($loop_question->quiz->users as $participant)
-
-                                    @if ($question->have_i_answered($loop_question))
-                                    <td scope="col">
-                                      @foreach ($participant->question_responses($loop_question) as $response)
-                                        @if ($response->correct == "1")
-                                          <b class="text-success">{{$response->answer}}</b>
-                                        @else
-                                          <strike>{{$response->answer}}</strike>
-                                        @endif
-                                      </br>
-                                      @endforeach
-                                    </td>
-                                    @else
-                                      <td scope="col">Left Blank</td>
-                                    @endif
-                                  @endforeach
-                                </tr>
-                            @endforeach
-
-                                  <td><b>{{ __('Total') }}</b></td>
-                                  @foreach ($question->quiz->users as $participant)
-                                  <th scope="col">{{ $participant->correct_so_far($quiz) }}</th>
-                                  @endforeach
-                                </tr>
+                                @endif
+                              </th>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">{{$participant->name}}</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td>
+                                  {{$participant->total}}
+                                </td>
+                            </tr>
+                          @endforeach
                         </tbody>
                     </table>
                 </div>
+              </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="header bg-gradient-primary pb-9 pt-1">
+    <div class="container">
+        <div class="header-body text-center mt-2 mb-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6">
+                    <h1 class="text-white">Answers</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header border-0">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        </div>
+                </div>
             </div>
 
+            <div class="col-12">
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+            </div>
+            <div class="row">
+              <div class="container">
+                <div class="accordion" id="accordionAnswers">
+                        @foreach ($all_questions as $question)
+                          @if ($question->title != "%%scores%%")
+                            <div class="card">
+                                <div class="card-header" id="heading-{{$question->id}}" data-toggle="collapse" data-target="#collapse-{{$question->id}}" aria-expanded="true" aria-controls="collapse-{{$question->id}}">
+                                    <h5 class="mb-0"><i class="fas fa-chevron-down"></i> {{html_entity_decode(htmlspecialchars_decode($question->question))}}</h5>
+                                    @if (null != $question->correct_answer) <h5 class="mb-0">Correct Answer : {{$question->correct_answer}}</h5> @else <h5 class="mb-0"><i>No correct answer set</i></h5> @endif
+                                </div>
+                                <div id="collapse-{{$question->id}}" class="collapse @if ($loop->first) show @endif" aria-labelledby="heading-{{$question->id}}" data-parent="#accordionAnswers">
+                                    <div class="card-body">
+
+                                      <div class="table-responsive">
+                                          <div>
+                                          <table class="table align-items-center">
+                                              <thead class="thead-light">
+                                                  <tr>
+                                                      <th scope="col" class="sort" data-sort="name">Name</th>
+                                                      <th scope="col" class="sort" data-sort="budget">Answers</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody class="list">
+                                                @foreach ($question->quiz->users as $participant)
+                                                  <tr>
+                                                      <th scope="row">
+                                                          <div class="media align-items-center">
+                                                              <div class="media-body">
+                                                                  <span class="name mb-0 text-sm">{{$participant->name}}</span>
+                                                              </div>
+                                                          </div>
+                                                      </th>
+                                                      <td>
+                                                        @foreach ($participant->question_responses($question)->sortByDesc('id') as $response)
+                                                          @if ($participant->question_responses($question)->sortByDesc('id')->first() == $response)Latest:
+                                                            @if ($response->correct == "1")
+                                                              <span id="response-{{$response->id}}" class="text-success">{{$response->answer}}</span>
+                                                            @else
+                                                              <span id="response-{{$response->id}}" class="text-danger">{{$response->answer}}</span>
+                                                            @endif
+                                                          @else
+                                                            <strike>{{$response->answer}}<strike>
+                                                          @endif
+                                                        </br>
+                                                        @endforeach
+                                                      </td>
+                                                  </tr>
+                                                @endforeach
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                    </div>
+                              </div>
+                            </div>
+                          </div>
+                        @endif
+                      @endforeach
+
+                  </div>
+                </div>
+            </div>
         </div>
+
     </div>
-  </br>
+</div>
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
@@ -110,11 +199,14 @@
 
       error: function(data){
       // quiz ready, update page
-       clearInterval(interval);
+        if (data.responseJSON.type == "end_of_quiz") {
+          clearInterval(interval);
+        }
 
-       $('#next_question_btn').attr('href', '#');
-       $('#next_question_btn_text').text('End of quiz');
-       $('#next_question_btn_icon').removeClass();
+          $('#next_question_btn').attr('href', data.responseJSON.next);
+          $('#next_question_btn_text').text(data.responseJSON.btn_text);
+          $('#next_question_btn_icon').removeClass();
+       
      }
 
      });

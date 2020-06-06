@@ -13,11 +13,10 @@
             <div class="text-center mt-7 mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ $question->question }}</h1>
+                        <h1 class="text-white">{{ html_entity_decode(htmlspecialchars_decode($question->question)) }}</h1>
                     </div>
                 </div>
             </div>
-            @if ($question->title != "scores")
               <div class="text-center mt-7 mb-7">
                   <div class="row justify-content-center">
                       <div class="col-lg-5 col-md-6">
@@ -35,51 +34,6 @@
                       </div>
                   </div>
               </div>
-            @else
-              <div class="table-responsive">
-                  <table class="table align-items-center table-flush">
-                      <thead class="thead-light">
-                          <tr>
-                              <th scope="col">{{ __('Question') }}</th>
-                              @foreach ($question->quiz->users as $participant)
-                              <th scope="col">{{ $participant->name }}</th>
-                              @endforeach
-                          </tr>
-                      </thead>
-                      <tbody>
-                          @foreach ($all_questions as $loop_question)
-                              <tr>
-                                <td>{{ $question->$loop_question }}</td>
-
-                                @foreach ($loop_question->quiz->users as $participant)
-
-                                  @if ($question->have_i_answered($loop_question))
-                                  <td scope="col">
-                                    @foreach ($participant->question_responses($loop_question) as $response)
-                                      @if ($response->correct == "1")
-                                        <b>{{$response->answer}}</b>
-                                      @else
-                                        <strike>{{$response->answer}}</strike>
-                                      @endif
-                                    </br>
-                                    @endforeach
-                                  </td>
-                                  @else
-                                    <td scope="col">Left Blank</td>
-                                  @endif
-                                @endforeach
-                              </tr>
-                          @endforeach
-
-                                <td><b>{{ __('Total') }}</b></td>
-                                @foreach ($question->quiz->users as $participant)
-                                <th scope="col">{{ $participant->correct_so_far($question->quiz) }}</th>
-                                @endforeach
-                              </tr>
-                      </tbody>
-                  </table>
-              </div>
-            @endif
         </div>
         <div class="text-center mt--7">
           <div class="row justify-content-center">
