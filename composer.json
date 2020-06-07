@@ -14,7 +14,6 @@
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
-        "ext-memcache": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "fzaninotto/faker": "^1.9.1",

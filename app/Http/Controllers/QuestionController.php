@@ -372,7 +372,7 @@ class QuestionController extends Controller
 
       }
 
-      return response()->json(["next" => null, "type" => 'waiting', 'btn_text' => 'default [9d2g5kam]'], 423);
+      return response()->json(["next" => null, "type" => 'waiting', 'btn_text' => 'default'], 423);
 
     }
 
@@ -428,7 +428,7 @@ class QuestionController extends Controller
 
 
 
-      return response()->json(["next" => route('question.master', $next_question), "type" => 'next_question', 'btn_text' => 'Next question [9d2g5kam]'], 200);
+      return response()->json(["next" => route('question.master', $next_question), "type" => 'next_question', 'btn_text' => 'Next question'], 200);
 
 
     }

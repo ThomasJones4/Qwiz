@@ -6,7 +6,7 @@
         <div class="header-body text-center mt-7 mb-7">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
-                    <h1 class="text-white">Results</h1>
+                    <h1 class="text-white">Results Of Last Round</h1>
                     <h2 class="text-white">{{$quiz->name}}</h1>
                 </div>
             </div>
@@ -193,6 +193,7 @@
        clearInterval(interval);
 
        $('#next_question_btn').attr('href', data.next);
+       $('#next_question_btn').attr('dusk', data.type);
        $('#next_question_btn_text').text(data.btn_text);
        $('#next_question_btn_icon').removeClass().addClass('fa fa-play');
      },
@@ -204,9 +205,10 @@
         }
 
           $('#next_question_btn').attr('href', data.responseJSON.next);
+          $('#next_question_btn').attr('href', data.responseJSON.type);
           $('#next_question_btn_text').text(data.responseJSON.btn_text);
           $('#next_question_btn_icon').removeClass();
-       
+
      }
 
      });

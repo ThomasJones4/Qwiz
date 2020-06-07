@@ -102,6 +102,7 @@
        clearInterval(interval_next);
 
        $('#next_question_btn').attr('href', data.next);
+       $('#next_question_btn').attr('dusk', data.type);
        $('#next_question_btn_text').text(data.btn_text);
        $('#next_question_btn_icon').removeClass().addClass('fa fa-play');
        $('#next_question_btn').removeClass('disabled').addClass('active');

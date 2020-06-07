@@ -97,7 +97,7 @@
        $('#response_count').text(data['count'] + '/' + data['total'] + ' responded');
 
              if (data['count'] == data['total']) {
-               clearInterval(interval_res);
+               clearInterval(interval);
              }
      }
      });

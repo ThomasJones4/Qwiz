@@ -101,7 +101,7 @@
 
     <div class="text-center mt--7">
         <div class="row justify-content-center">
-          <a href="{{ route('quiz.finish.marking', $quiz) }}" id="next_question_btn" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+          <a href="{{ route('quiz.finish.marking', $quiz) }}" id="next_question_btn" dusk="release_scores" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
             <span id="next_question_btn_text" class="btn-inner--text">Release Scores</span>
             <span class="btn-inner--icon"><i id="next_question_btn_icon" class="fa fa-hourglass-start"></i></span>
           </a>

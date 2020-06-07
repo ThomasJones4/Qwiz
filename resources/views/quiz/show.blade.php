@@ -60,6 +60,7 @@
       // quiz ready, update page
        clearInterval(interval);
        $('#quiz_start_btn').attr('href', data.next);
+       $('#quiz_start_btn').attr('dusk', 'start_quiz');
        $('#quiz_start_btn_text').text('Start Quiz');
        $('#quiz_start_btn_icon').removeClass().addClass('fa fa-play');
      }
