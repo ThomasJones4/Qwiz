@@ -34,7 +34,7 @@
                 <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                            <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-4-800x800.jpg">
+                            <img alt="Image placeholder" src="https://api.adorable.io/avatars/400/{{ auth()->user()->id }}"">
                         </span>
 
                         <div class="media-body ml-2 d-none d-md-block">
