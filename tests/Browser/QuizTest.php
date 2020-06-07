@@ -87,7 +87,6 @@ class QuizTest extends DuskTestCase
                 ->type('answer', 'MYANSWER')
                 ->assertSee('Submit')
                 ->press('Submit')
-                ->assertSee('Your Answer')
                 ;
 
           $qm_browser->waitFor('@next_question')
