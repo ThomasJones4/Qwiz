@@ -1,79 +1,177 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<!-- PROJECT SHIELDS -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
+
+
+<!-- PROJECT LOGO -->
+<br />
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+  <a href="https://github.com/ThomasJones4/lockdownquiz">
+      <h1 align="center" style="decoration:none;">Qwiz</h1>
+  </a>
+
+  <h3 align="center">An Open Source Live Quiz Platform</h3>
+
+  <p align="center">
+    <a href="https://qwiz.co.uk/">View Live</a>
+    ·
+    <a href="https://github.com/ThomasJones4/lockdownquiz/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/ThomasJones4/lockdownquiz/issues">Request Feature</a>
+  </p>
 </p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-## Laravel Sponsors
+Qwiz is a web app built on laravel that allows pub style quizzes. After the UK doing into lockdown on 23rd March 2020, the need for virtual pub style quizzes grew within my social circles, to the point where pen and paper no longer cut it. This is my attempt at keeping people connected.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+### Built With
+* [Laravel ❤️❤️](https://github.com/laravel/laravel)
+* [Bootstrap](https://github.com/twbs/bootstrap)
+* [JQuery](https://github.com/jquery/jquery)
 
+
+# Want to host your own Qwiz server?
+<!-- GETTING STARTED -->
+## Getting Started
+
+The simple steps below will get you up and running with your own quizzes in no time.
+
+### Installation
+
+1. Clone the repo
+```sh
+git clone https://github.com/ThomasJones4/lockdownquiz.git
+```
+2. Install NPM packages
+```sh
+npm install
+```
+3. Install Composer packages
+```sh
+composer install
+```
+4. Create a fresh `.env` file
+```sh
+cp .env.example .env
+```
+5. Generate an encryption key
+```sh
+php artisan key:generate
+```
+6. Add database credentials and update `.env` file
+```php
+DB_CONNECTION=mysql
+DB_HOST=
+DB_PORT=
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+```
+7. Migrate the database
+```sh
+php artisan migrate
+```
+8. Create an AWS S3 bucket and update `.env` file
+```php
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=
+AWS_BUCKET=
+AWS_URL=
+```
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Once a quiz has been created a user can create their own quiz, either from their own question or by using the random question genarator.
+
+Participants can join by following a quiz masters join link both `/join/{your quiz id}` and `/🎲/{your quiz id}`. Once logged in or registered, they can join by using the 8 digit code from the quiz master (keep this secret as it prevents unwanted guests).
+
+Every quiz must end with a results screen to allow the quiz master to mark the answers, however the quiz master can add breaks at any point though out the quiz (15 questions in? 👀🍻) and mark the question so far.
+
+<!-- ROADMAP -->
+## Roadmap
+
+See the [open issues](https://github.com/ThomasJones4/lockdownquiz/issues) for a list of proposed features (and known issues).
+
+
+
+<!-- CONTRIBUTING -->
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## Code of Conduct
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
+<!-- LICENSE -->
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Thomas Jones - [LinkedIn](https://linkedin.com/thomasjpjones) - thomasj2015@outlook.com
+
+Project Link: [https://github.com/ThomasJones4/lockdownquiz](https://github.com/ThomasJones4/lockdownquiz)
+
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [OpenTDB](https://opentdb.com/) by [PIXELTAIL GAME LLC](https://www.pixeltailgames.com/). Used under licence [CC BY 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+* [Img Shields](https://shields.io)
+* [Font Awesome](https://fontawesome.com)
+* [Argon](https://github.com/creativetimofficial/argon-dashboard-laravel)
+* [Laravel Dusk](https://github.com/laravel/dusk)
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/ThomasJones4/lockdownquiz.svg?style=flat-square
+[contributors-url]: https://github.com/ThomasJones4/lockdownquiz/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ThomasJones4/lockdownquiz.svg?style=flat-square
+[forks-url]: https://github.com/ThomasJones4/lockdownquiz/network/members
+[stars-shield]: https://img.shields.io/github/stars/ThomasJones4/lockdownquiz.svg?style=flat-square
+[stars-url]: https://github.com/ThomasJones4/lockdownquiz/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ThomasJones4/lockdownquiz.svg?style=flat-square
+[issues-url]: https://github.com/ThomasJones4/lockdownquiz/issues
+[license-shield]: https://img.shields.io/github/license/ThomasJones4/lockdownquiz.svg?style=flat-square
+[license-url]: https://github.com/ThomasJones4/lockdownquiz/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/thomasjpjones
