@@ -22,13 +22,21 @@ Route::get('/', function () {
   }
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
+  if (Auth::check()) {
+    return redirect()->route('show.my.quiz');
+  } else {
+    return view('welcome');
+  }
+})->name('home');
+
 
 Auth::routes();
 
 
-Route::get('quizzes/{quiz}/header.png', 'QuizController@quiz_header')->name('social.quiz.header');
-Route::get('header.png', 'QuizController@social_header');
+Route::get('privacy', function() {
+  return view('privacy_policy');
+})->name('privacy_policy');
 
 
 Route::group(['middleware' => 'auth'], function () {
