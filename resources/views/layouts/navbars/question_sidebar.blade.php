@@ -6,7 +6,7 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('home') }}">
-            <img src="{{ asset('argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            Qwiz
         </a>
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">

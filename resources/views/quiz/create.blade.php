@@ -31,7 +31,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label class="form-control-label" for="scheduled_start">Scheduled Start</label>
-              <input type="date" class="form-control" id="scheduled_start" name="scheduled_start" value="{{ old('scheduled_start') }}">
+              <input type="date" class="form-control" id="scheduled_start" name="scheduled_start" value="{{ old('scheduled_start') }}" placeholder="YYYY-MM-DD: Our datepicker doesn't work on your device. Please enter manually">
             </div>
           </div>
         </div>

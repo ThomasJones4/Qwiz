@@ -41,9 +41,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Title') }}</th>
-                                <th scope="col">{{ __('Scheduled Start') }}</th>
                                 <th scope="col">{{ __('Invite code') }}</th>
-                                <th scope="col">{{ __('Participants') }}</th>
                                 <th scope="col">Edit</th>
                                 <th scope="col">Actions</th>
                             </tr>
@@ -53,17 +51,16 @@
                             @foreach ($owned_quizzes as $quiz)
                                 <tr>
                                   <td>{{ $quiz->name }}</td>
-                                  <td>{{ $quiz->scheduled_start }}</td>
                                   <td>
                                     @if($quiz->is_finish())
                                       {{ __('This Quiz has finished') }}
                                     @elseif ($quiz->is_live())
                                     {{ __('This Quiz has started') }}
                                     @else
-                                      <a href="{{ route('show.join.quiz', $quiz) }}">{{ $quiz->invite_code }}</a>
+                                      <a href="{{ route('show.join.quiz', $quiz) }}">{{ $quiz->invite_code }} </a>
                                     @endif
+                                    : {{$quiz->users->count()}} players
                                   </td>
-                                  <td>{{ $quiz->users->count() }}</td>
                                   <td>
                                     @can('editable', $quiz)
                                     <a class="btn btn-sm btn-icon-only " href="{{ route('quiz.master.show', $quiz) }}" role="button">
