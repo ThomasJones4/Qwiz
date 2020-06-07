@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::get('questions/{question}/master/progress/next', 'QuestionController@master_next')->name('master_next');
   Route::get('questions/{question}/progress/force', 'QuestionController@next_force')->name('next_question_results');
   Route::get('questions/{question}/responses/count', 'ResponseController@count')->name('response.count');
+  Route::get('quizzes/{quiz}/count', 'QuizController@count')->name('quiz.player.count');
+  Route::get('quizzes/{quiz}/players/get', 'QuizController@players_get')->name('quiz.player.get');
   Route::get('responses/{response}/toggle', 'ResponseController@mark_toggle')->name('response.mark_toggle');
 
 });

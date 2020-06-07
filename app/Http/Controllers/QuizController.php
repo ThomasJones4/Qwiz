@@ -253,6 +253,35 @@ class QuizController extends Controller
     }
 
     /**
+     * get number of people already joined
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
+    public static function count(Quiz $quiz)
+    {
+
+      $player_count = $quiz->users->count();
+
+      return response()->json(["count" => $player_count], 200);
+
+    }
+
+    /**
+     * get list of people joined
+     *
+     * @param  \App\Quiz  $quiz
+     * @return \Illuminate\Http\Response
+     */
+    public static function players_get(Quiz $quiz)
+    {
+
+      $players = $quiz->users()->pluck('name', 'id');
+      return response()->json(["players" => $players], 200);
+
+    }
+
+    /**
      * start the quiz
      *
      * @param  \App\Quiz  $quiz

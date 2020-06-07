@@ -15,6 +15,14 @@
                 </div>
             </div>
             <div class="text-center mt-7 mb-7">
+
+              <div class="text-center mt-7 mb-7">
+                  <div class="row justify-content-center">
+                      <div class="col-lg-5 col-md-6">
+                          <h2 class="text-white" id="joined_players">Waiting for players</h2>
+                      </div>
+                  </div>
+              </div>
                 <div class="row justify-content-center">
                   <form action="{{ route('join.quiz', [$quiz]) }}" method="POST">
                     @csrf
@@ -48,5 +56,27 @@
   @push('js')
       <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
       <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
+      <script>
+      function fetchdata_users(){
+       $.ajax({
+        url: '{{ route('quiz.player.get', [$quiz]) }}?api_token={{auth()->user()->api_token}}',
+        type: 'get',
+        success: function(data){
+        // quiz ready, update page
+        var players = "Players: "
+          $.each(data.players, function(key, value) {
+            players = players + value + ", "
+          })
+          $('#joined_players').text(players + "...");
+        }
+       });
+      }
 
+      $(document).ready(function(){
+       fetchdata_users();
+       interval = setInterval(fetchdata_users,2000);
+      });
+
+
+      </script>
   @endpush
