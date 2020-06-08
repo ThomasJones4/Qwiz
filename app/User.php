@@ -75,4 +75,42 @@ class User extends Authenticatable
       });
       return $count;
     }
+
+    public function fastest_response_in_seconds() {
+      $fastest = 999999;
+
+      $this->quizzes->each(function ($quiz) use (&$fastest) {
+        $quiz->questions->each(function ($question) use (&$fastest) {
+          $last_response = $question->responses->where('user_id', $this->id)->sortBy('created_at')->last();
+          $response_created = (null != $last_response)? $last_response->created_at : null;
+          if (null != $response_created) {
+            $question_released = $question->updated_at;
+            $diff = $question_released->diffInSeconds($response_created);
+            if ($diff < $fastest) {
+              $fastest = $diff;
+            }
+          }
+        });
+
+      });
+
+      return $fastest;
+    }
+
+    public function percentage_correct() {
+      $total = 0;
+      $correct = 0;
+      $this->quizzes->each(function ($quiz) use (&$total,&$correct) {
+        $quiz->questions->each(function ($question) use (&$total,&$correct) {
+          $total++;
+          $last_response = $question->responses->where('user_id', $this->id)->sortBy('created_at')->last();
+          if(null != $last_response && $last_response->correct) {
+            $correct++;
+          }
+        });
+      });
+
+      return ($total != 0)? round($correct/$total, 2): null;
+
+    }
 }
