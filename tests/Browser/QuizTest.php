@@ -87,6 +87,7 @@ class QuizTest extends DuskTestCase
                 ->type('answer', 'MYANSWER')
                 ->assertSee('Submit')
                 ->press('Submit')
+                ->waitFor('@your-answer')
                 ;
 
           $qm_browser->waitFor('@next_question')
@@ -102,6 +103,7 @@ class QuizTest extends DuskTestCase
                  ->type('answer', 'MYANSWER')
                  ->assertSee('Submit')
                  ->press('Submit')
+                 ->waitFor('@your-answer')
                  ;
 
            $qm_browser->waitFor('@next_question')
@@ -117,6 +119,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -133,6 +136,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -149,6 +153,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -165,6 +170,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -181,6 +187,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -197,6 +204,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
 
@@ -213,6 +221,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
            $qm_browser->waitFor('@next_question')
@@ -228,6 +237,7 @@ class QuizTest extends DuskTestCase
                   ->type('answer', 'MYANSWER')
                   ->assertSee('Submit')
                   ->press('Submit')
+                  ->waitFor('@your-answer')
                   ;
 
             $qm_browser->waitFor('@next_question')
