@@ -34,6 +34,7 @@ class MediaController extends Controller
 
     $request->validate([
       'file' => 'required|mimes:gif,png,jpeg,jpg,avi,mvv,mov,mp4,mp3,acc,wav,mpga',
+      'answer' => '',
     ]);
 
     $images = ['gif', 'png', 'jpeg', 'jpg'];
@@ -50,8 +51,12 @@ class MediaController extends Controller
       $media->type = "video";
     }
 
+    if ($request->answer == null) {
+      $media->answer = "1";
+    }
+
     $media->extension = $request->file->extension();
-    
+
     //upload to s3 bucket
     $media->url = config('filesystems.disks.s3.url').$request->file('file')->store('images', 's3');
 

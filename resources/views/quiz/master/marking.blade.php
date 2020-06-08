@@ -42,6 +42,48 @@
                                     <div id="collapse-{{$question->id}}" class="collapse @if ($loop->first) show @endif" aria-labelledby="heading-{{$question->id}}" data-parent="#accordionAnswers">
                                         <div class="card-body">
 
+                                          @if($question->has('media'))
+                                          <div class="table-responsive">
+                                            <table class="table align-items-center table-flush">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th scope="col">{{ __('#') }}</th>
+                                                        <th scope="col">{{ __('Media') }}</th>
+                                                        <th scope="col">{{ __('Hidden until answers?') }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                  @php $count = 0 @endphp
+                                                  @foreach($question->media as $media)
+                                                  @php $count++ @endphp
+
+                                                        <tr>
+                                                          <td>{{$count}}</td>
+                                                          <td>
+                                                              @if ($media->type == 'image')
+                                                                <img max-width="20%" height="auto" src="{{ $media->url}}">
+                                                              @elseif ($media->type == 'video')
+                                                                <video width="400" controls>
+                                                                  <source src="{{ $media->url}}" type="video/{{$media->extension}}">
+                                                                  Your browser does not support HTML video.
+                                                                </video>
+                                                              @elseif ($media->type == 'audio')
+                                                              <audio controls>
+                                                                <source src="{{$media->url}}" type="audio/mp3">
+                                                                Your browser does not support the audio element.
+                                                              </audio>
+                                                              @endif
+                                                          </td>
+                                                          <td>@if($media->answer) Yes @else No @endif</td>
+
+                                                      </tr>
+                                                        @endforeach
+                                                </tbody>
+                                            </table>
+                                          </div>
+                                          @endif
+
+
                                           <div class="table-responsive">
                                               <div>
                                               <table class="table align-items-center">

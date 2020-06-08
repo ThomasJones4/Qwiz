@@ -20,6 +20,7 @@ class Media extends Migration
           $table->string('url')->nullable();
           $table->string('type')->nullable();
           $table->string('extension')->nullable();
+          $table->boolean('answer')->nullable();
           $table->timestamps();
       });
     }

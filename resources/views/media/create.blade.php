@@ -26,6 +26,8 @@
             <div class="form-group">
               <label class="form-control-label" for="file">Add new Media</label>
               <input type="file" class="form-control" id="file" name="file" value="{{ old('file') }}">
+              <label class="form-control-label" for="answer">Hide until answers?</label>
+              <input type="checkbox" class="form-control" id="answer" name="answer" value="{{ old('answer') }}">
             </div>
           </div>
         </div>

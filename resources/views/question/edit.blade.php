@@ -99,6 +99,7 @@
                               <tr>
                                   <th scope="col">{{ __('#') }}</th>
                                   <th scope="col">{{ __('Media') }}</th>
+                                  <th scope="col">{{ __('Hidden until answers?') }}</th>
                                   <th scope="col"></th>
                                   <th scope="col"></th>
                               </tr>
@@ -125,7 +126,7 @@
                                         </audio>
                                         @endif
                                     </td>
-
+                                    <td>@if($media->answer) Yes @else No @endif</td>
                                     <td>
                                       <a class="btn btn-sm btn-icon-only text-light" href="{{ route('media.delete', compact('media', 'question')) }}" role="button">
                                         <i class="fas fa-trash"></i>

@@ -37,7 +37,7 @@
                       <div class="row">
 
                     @php $count = 0 @endphp
-                    @foreach($question->media as $media)
+                    @foreach($question->media->where('answer', "0") as $media)
                     @php $count++ @endphp
                           <div class="col-sm">
                             <h3 class="text-white">{{$count}})</h3>

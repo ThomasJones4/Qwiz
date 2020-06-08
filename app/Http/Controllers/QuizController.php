@@ -387,7 +387,9 @@ class QuizController extends Controller
         return redirect()->route('quiz.show', $quiz);
       }
 
-      return view('quiz.overview', compact('quiz'));
+      $all_questions = $quiz->questions->where('released')->sortBy('order');
+
+      return view('quiz.overview', compact('quiz', 'all_questions'));
     }
 
 

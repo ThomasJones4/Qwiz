@@ -151,7 +151,7 @@ class QuestionController extends Controller
             $answers = implode(", ", array_values($answers));
             $new_question['possible_answers'] = $answers;
           }
-          $content =  (($random_question['type'] == "boolean")? "True or False? ":"") . $random_question['question'];
+          $content =  (($random_question['type'] == "boolean")? "True or False? ":"") . html_entity_decode(htmlspecialchars_decode($random_question['question']));
           $new_question['question'] = $content;
           $new_question['correct_answer'] = $random_question['correct_answer'];
 
@@ -171,7 +171,6 @@ class QuestionController extends Controller
             $new_question['order'] = 0;
             $added++;
           }
-          echo ("#COUNT#:" . $quiz->questions()->get()->count());
           $quiz->questions()->create($new_question);
 
           // unset question so that info does not leak to next question in loops
