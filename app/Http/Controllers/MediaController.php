@@ -51,8 +51,10 @@ class MediaController extends Controller
       $media->type = "video";
     }
 
-    if ($request->answer == null) {
+    if ($request->has('answer')) {
       $media->answer = "1";
+    } else {
+      $media->answer = "0";
     }
 
     $media->extension = $request->file->extension();
